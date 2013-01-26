@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include "loggingwidget.h"
 #include "scenetreewidget.h"
+#include "glview.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -19,6 +20,10 @@ MainWindow::MainWindow(QWidget *parent)
             Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea,
             Qt::LeftDockWidgetArea
             );
+
+
+    auto glv=new GLView();
+    setCentralWidget(glv);
 }
 
 void MainWindow::setupDock(QWidget *w, const QString &dockTitle, 
