@@ -45,10 +45,11 @@ files {
     "*.cpp", "*.h",
 }
 prebuildcommands {
-    "moc mainwindow.h -o moc_mainwindow.cpp",
+    "make -f Makefile.qt moc",
 }
 files {
     "moc_mainwindow.cpp",
+    "moc_loggingwidget.cpp",
 }
 
 -- compile

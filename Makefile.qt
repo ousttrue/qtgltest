@@ -1,0 +1,12 @@
+MOC=moc
+MOC_FILES=moc_mainwindow.cpp moc_loggingwidget.cpp
+
+
+moc: $(MOC_FILES)
+
+moc_mainwindow.cpp: mainwindow.h
+	$(MOC) $? -o $@
+
+moc_loggingwidget.cpp: loggingwidget.h
+	$(MOC) $? -o $@
+

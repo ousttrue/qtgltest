@@ -1,11 +1,19 @@
 #include <QtGui>
 #include "mainwindow.h"
+#include "loggingwidget.h"
 #include "scenetreewidget.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent)
 {
+    m_logging=new LoggingWidget;
+    setupDock(m_logging,
+            tr("Log"),
+            Qt::BottomDockWidgetArea,
+            Qt::BottomDockWidgetArea
+            );
+
     setupDock(new SceneTreeWidget,
             tr("Scene"), 
             Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea,
