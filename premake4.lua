@@ -18,6 +18,13 @@ do
 	targetdir "release"
 end
 
+configuration "gmake"
+do
+    buildoptions {
+        "-std=c++0x",
+    }
+end
+
 configuration {}
 
 ------------------------------------------------------------------------------
