@@ -38,6 +38,10 @@ files {
     "*.cpp", "*.h",
 }
 prebuildcommands {
+    "moc mainwindow.h -o moc_mainwindow.cpp",
+}
+files {
+    "moc_mainwindow.cpp",
 }
 
 -- compile
