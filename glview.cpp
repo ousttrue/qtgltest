@@ -2,6 +2,7 @@
 #include "OpenGLRenderer.h"
 #include "OpenGLScene.h"
 #include <QTimer>
+#include <QMouseEvent>
 
 
 GLView::GLView(std::shared_ptr<OpenGLScene> scene, QWidget *parent)
@@ -35,5 +36,65 @@ void GLView::resizeGL(int width, int height)
 void GLView::paintGL()
 {
     m_gl->render(m_scene);
+}
+
+void GLView::mouseMoveEvent(QMouseEvent *event)
+{
+    if(m_scene->onMouseMove(event->x(), event->y())){
+        repaint();
+    }
+}
+
+void GLView::mousePressEvent(QMouseEvent *event)
+{
+    switch(event->button()){
+        case Qt::LeftButton:
+            if(m_scene->onMouseLeftDown(event->x(), event->y())){
+                repaint();
+            }
+            break;
+
+        case Qt::MidButton:
+            if(m_scene->onMouseMiddleDown(event->x(), event->y())){
+                repaint();
+            }
+            break;
+
+        case Qt::RightButton:
+            if(m_scene->onMouseRightDown(event->x(), event->y())){
+                repaint();
+            }
+            break;
+    }
+}
+
+void GLView::mouseReleaseEvent(QMouseEvent *event)
+{
+    switch(event->button()){
+        case Qt::LeftButton:
+            if(m_scene->onMouseLeftUp(event->x(), event->y())){
+                repaint();
+            }
+            break;
+
+        case Qt::MidButton:
+            if(m_scene->onMouseMiddleUp(event->x(), event->y())){
+                repaint();
+            }
+            break;
+
+        case Qt::RightButton:
+            if(m_scene->onMouseRightUp(event->x(), event->y())){
+                repaint();
+            }
+            break;
+    }
+}
+
+void GLView::wheelEvent(QWheelEvent *event)
+{
+    if(m_scene->onMouseWheel(event->delta())){
+        repaint();
+    }
 }
 

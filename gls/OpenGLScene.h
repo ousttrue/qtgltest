@@ -24,5 +24,15 @@ public:
 
     void clear(){ m_drawables.clear(); }
     void addBuffer(std::shared_ptr<IndexedVertexBuffer> buffer);
+
+    // mouse event
+    bool onMouseLeftDown(int x, int y);
+    bool onMouseMiddleDown(int x, int y);
+    bool onMouseRightDown(int x, int y);
+    bool onMouseLeftUp(int x, int y);
+    bool onMouseMiddleUp(int x, int y);
+    bool onMouseRightUp(int x, int y);
+    bool onMouseMove(int x, int y);
+    bool onMouseWheel(int d);
 };
 

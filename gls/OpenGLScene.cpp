@@ -28,3 +28,43 @@ void OpenGLScene::addBuffer(std::shared_ptr<IndexedVertexBuffer> buffer)
     m_drawables.push_back(buffer);
 }
 
+bool OpenGLScene::onMouseLeftDown(int x, int y)
+{
+    return false;
+}
+
+bool OpenGLScene::onMouseMiddleDown(int x, int y)
+{
+    return false;
+}
+
+bool OpenGLScene::onMouseRightDown(int x, int y)
+{
+    return false;
+}
+
+bool OpenGLScene::onMouseLeftUp(int x, int y)
+{
+    return false;
+}
+
+bool OpenGLScene::onMouseMiddleUp(int x, int y)
+{
+    return false;
+}
+
+bool OpenGLScene::onMouseRightUp(int x, int y)
+{
+    return false;
+}
+
+bool OpenGLScene::onMouseMove(int x, int y)
+{
+    return false;
+}
+
+bool OpenGLScene::onMouseWheel(int d)
+{
+    return false;
+}
+
