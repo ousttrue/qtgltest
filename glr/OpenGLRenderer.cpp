@@ -63,6 +63,8 @@ bool OpenGLRenderer::initialize()
         // fatal
         return false;
     }
+
+    return true;
 }
 
 

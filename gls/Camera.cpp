@@ -1,8 +1,13 @@
 #include "Camera.h"
+#ifdef _MSC_VER
+#define _USE_MATH_DEFINES
+#include <math.h>
+#endif
 #include <array>
 #include <algorithm>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
 
 
 static float toRadian(float deglee)
@@ -15,14 +20,6 @@ Camera::Camera()
     : m_headDeglee(0), m_pitchDeglee(0), m_distance(10.0f),
     m_fovy(30.0f), m_aspect(1.0f), m_near(0.5f), m_far(100.0f)
 {
-    std::array<float, 16> projection{
-        1.0f, 0, 0, 0,
-        0, 1.0f, 0, 0,
-        0, 0, 1.0f, 0,
-        0, 0, 0, 1.0f,
-    };
-    std::copy(projection.begin(), projection.end(), m_projection);
-
     calcViewMatrix();
     calcProjectionMatrix();
 }
