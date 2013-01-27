@@ -1,10 +1,4 @@
 #include "IndexedVertexBuffer.h"
-#include "Shader.h"
-#include "ShaderProgram.h"
-#include "VBO.h"
-#include "VAO.h"
-#include <iostream>
-
 
 
 IndexedVertexBuffer::IndexedVertexBuffer()
@@ -15,62 +9,10 @@ IndexedVertexBuffer::~IndexedVertexBuffer()
 {
 }
 
-void IndexedVertexBuffer::setShader(std::shared_ptr<ShaderProgram> shader)
-{
-    m_program=shader;
-}
-
-bool IndexedVertexBuffer::initialize()
-{
-    if(m_vertices.empty()){
-        return false;
-    }
-    if(m_indices.empty()){
-        return false;
-    }
-
-    // interleaved single vbo
-    auto vbo=std::make_shared<VBO>();
-    if(!vbo->bufferData(m_vertices.size()*sizeof(Vertex), &m_vertices[0])){
-        // fatal
-        return false;
-    }
-
-    // VAO
-    m_vao=std::make_shared<VAO>();
-    if(!m_vao->bind(0, vbo, 6*sizeof(float), 0)){
-        // fatal
-        return false;
-    }
-    if(!m_vao->bind(1, vbo, 6*sizeof(float), 3*sizeof(float))){
-        // fatal
-        return false;
-    }
-
-    // index buffer
-    if(!m_vao->bufferData(m_indices.size()*sizeof(GLuint), &m_indices[0])){
-        assert(false);
-        // fatal
-        return false;
-    }
-
-    return true;
-}
-
-unsigned int IndexedVertexBuffer::getSubMeshCount()
-{
-    return 1;
-}
-
-unsigned int IndexedVertexBuffer::getIndexCount(unsigned int inex)
-{
-    return m_indices.size();
-}
-
 std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateCube(float fSize)
 {
     auto buffer=std::make_shared<IndexedVertexBuffer>();
-    const GLfloat cube_vertices [8][3] = {
+    const float cube_vertices [8][3] = {
         {1.0, 1.0, 1.0}, 
         {1.0, -1.0, 1.0}, 
         {-1.0, -1.0, 1.0}, 
@@ -80,7 +22,7 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateCube(float fSize
         {-1.0, -1.0, -1.0}, 
         {-1.0, 1.0, -1.0} 
     };
-    const GLfloat cube_vertex_colors [8][3] = {
+    const float cube_vertex_colors [8][3] = {
         {1.0, 1.0, 1.0}, 
         {1.0, 1.0, 0.0}, 
         {0.0, 1.0, 0.0}, 
@@ -90,7 +32,7 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateCube(float fSize
         {0.0, 0.0, 0.0}, 
         {0.0, 0.0, 1.0} 
     };
-    GLint cube_num_faces = 6;
+    int cube_num_faces = 6;
     const short cube_faces [6][4] = {
         {3, 2, 1, 0}, 
         {2, 3, 7, 6}, 
@@ -136,5 +78,15 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateTriangle()
                 ));
     buffer->addTriangle(0, 1, 2);
     return buffer;
+}
+
+unsigned int IndexedVertexBuffer::getSubMeshCount()
+{
+    return 1;
+}
+
+unsigned int IndexedVertexBuffer::getIndexCount(unsigned int inex)
+{
+    return m_indices.size();
 }
 

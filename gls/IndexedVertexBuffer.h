@@ -18,25 +18,14 @@ struct Vertex
     {
     }
 };
-class ShaderProgram;
-class VAO;
 class IndexedVertexBuffer
 {
-    std::shared_ptr<ShaderProgram> m_program;
-    std::shared_ptr<VAO> m_vao;
-
     std::vector<Vertex> m_vertices;
     std::vector<unsigned int> m_indices;
 
 public:
     IndexedVertexBuffer();
     ~IndexedVertexBuffer();
-    void setShader(std::shared_ptr<ShaderProgram> shader)/*override*/;
-    bool initialize()/*override*/;
-    std::shared_ptr<ShaderProgram> getProgram()/*override*/{ return m_program; }
-    std::shared_ptr<VAO> getVAO()/*override*/{ return m_vao; }
-    unsigned int getIndexCount(unsigned int inex)/*override*/;
-    unsigned int getSubMeshCount()/*override*/;
 
     void pushVertex(const Vertex &v){ m_vertices.push_back(v); }
     void addTriangle(unsigned int i0, unsigned int i1, unsigned int i2)
@@ -44,6 +33,36 @@ public:
         m_indices.push_back(i0);
         m_indices.push_back(i1);
         m_indices.push_back(i2);
+    }
+
+    unsigned int getIndexCount(unsigned int inex);
+    unsigned int getSubMeshCount();
+
+    unsigned int getVerticesByteSize()const
+    { 
+        return m_vertices.size()*sizeof(Vertex);
+    }
+    Vertex* getVertexPointer(){
+        if(m_vertices.empty()){
+            return 0;
+        }
+        else{
+            return &m_vertices[0];
+        }
+    }
+
+    unsigned int getIndicesByteSize()const
+    {
+        return m_indices.size()*sizeof(unsigned int);
+    }
+    unsigned int *getIndexPointer()
+    {
+        if(m_indices.empty()){
+            return 0;
+        }
+        else{
+            return &m_indices[0];
+        }
     }
 
     static std::shared_ptr<IndexedVertexBuffer> CreateTriangle();

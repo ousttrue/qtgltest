@@ -7,7 +7,7 @@
 GLView::GLView(QWidget *parent)
 : QGLWidget(parent), m_scene(new OpenGLScene), m_elapsed(0)
 {
-    m_gl=std::make_shared<OpenGLRenderer>(m_scene);
+    m_gl=std::make_shared<OpenGLRenderer>();
 }
 
 GLView::~GLView()
@@ -23,18 +23,17 @@ void GLView::animate()
 void GLView::initializeGL()
 {
     m_gl->initialize();
-    m_scene->initialize();
 	qglClearColor(Qt::lightGray);
 }
 
 void GLView::resizeGL(int width, int height)
 {
+    m_scene->resize(width, height);
     m_gl->resize(width, height);
 }
 
 void GLView::paintGL()
 {
-    m_gl->clear();
-    m_gl->render();
+    m_gl->render(m_scene);
 }
 
