@@ -1,7 +1,7 @@
 #pragma once
 
 
-class OpenGLWorld
+class OpenGLRenderer
 {
     // draw
     unsigned int m_polyList;
@@ -17,8 +17,8 @@ class OpenGLWorld
     double m_view[16];
 
 public:
-    OpenGLWorld();
-    ~OpenGLWorld();
+    OpenGLRenderer();
+    ~OpenGLRenderer();
     void resize(int w, int h);
 
 	void update(int ms);

@@ -3,14 +3,14 @@
 #include <memory>
 
 
-class OpenGLWorld;
+class OpenGLRenderer;
 class GLView : public QGLWidget
 {
 Q_OBJECT
 
     int m_elapsed;
 
-    std::shared_ptr<OpenGLWorld> m_gl;
+    std::shared_ptr<OpenGLRenderer> m_gl;
 
 public:
     GLView(QWidget *parent = 0);

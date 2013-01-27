@@ -1,10 +1,10 @@
 #include "glview.h"
-#include "OpenGLWorld.h"
+#include "OpenGLRenderer.h"
 #include <QTimer>
 
 
 GLView::GLView(QWidget *parent)
-: QGLWidget(parent), m_gl(new OpenGLWorld), m_elapsed(0)
+: QGLWidget(parent), m_gl(new OpenGLRenderer), m_elapsed(0)
 {
 }
 

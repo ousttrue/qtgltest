@@ -1,4 +1,4 @@
-#include "OpenGLWorld.h"
+#include "OpenGLRenderer.h"
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -6,19 +6,19 @@
 #include <GL/glu.h>
 
 
-OpenGLWorld::OpenGLWorld()
+OpenGLRenderer::OpenGLRenderer()
 : m_polyList(0), ms_prev(0)
 {
     glEnable(GL_DEPTH_TEST);
 }
 
 
-OpenGLWorld::~OpenGLWorld()
+OpenGLRenderer::~OpenGLRenderer()
 {
 }
 
 
-void OpenGLWorld::resize(int w, int h)
+void OpenGLRenderer::resize(int w, int h)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
@@ -30,7 +30,7 @@ void OpenGLWorld::resize(int w, int h)
 }
 
 
-void OpenGLWorld::clear()
+void OpenGLRenderer::clear()
 {
     // Select correct buffer for this context.
     glDrawBuffer(GL_BACK);
@@ -39,7 +39,7 @@ void OpenGLWorld::clear()
 }
 
 
-void OpenGLWorld::render()
+void OpenGLRenderer::render()
 {
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixd(m_projection);
@@ -51,7 +51,7 @@ void OpenGLWorld::render()
 }
 
 
-void OpenGLWorld::update(int ms)
+void OpenGLRenderer::update(int ms)
 {
     // Find out how long since Idle() last ran.
     float timeDelta = (float)(ms - ms_prev) * 0.001f;
@@ -127,7 +127,7 @@ static GLuint initPolyList()
 
 
 // Something to look at, draw a rotating colour cube.
-void OpenGLWorld::drawCube()
+void OpenGLRenderer::drawCube()
 {
     if (!m_polyList) {
         m_polyList=initPolyList();
@@ -141,7 +141,7 @@ void OpenGLWorld::drawCube()
     glPopMatrix();	// Restore world coordinate system.
 }
 
-void OpenGLWorld::drawImage(
+void OpenGLRenderer::drawImage(
         int x, int y,
         const unsigned char *image, 
         int w, int h,
@@ -187,7 +187,7 @@ void OpenGLWorld::drawImage(
     restore();
 }
 
-void OpenGLWorld::save()
+void OpenGLRenderer::save()
 {
 	// Prepare an orthographic projection, 
     // set camera position for 2D drawing, and save GL state.
@@ -217,7 +217,7 @@ void OpenGLWorld::save()
 	glPushMatrix();
 }
 
-void OpenGLWorld::restore()
+void OpenGLRenderer::restore()
 {
 	// Restore previous projection, camera position, and GL state.
 	glMatrixMode(GL_PROJECTION);
@@ -238,7 +238,7 @@ void OpenGLWorld::restore()
     }
 }
 	
-void OpenGLWorld::keyboard(unsigned char key, int x, int y)
+void OpenGLRenderer::keyboard(unsigned char key, int x, int y)
 {
     switch(key){
         case ' ':
