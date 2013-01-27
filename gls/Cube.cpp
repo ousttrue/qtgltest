@@ -114,50 +114,38 @@ bool Cube::initialize()
     // VAO
     m_vao=std::make_shared<VAO>();
 
-    // create vbo
-    {
-        auto positionBuffer=std::make_shared<VBO>();
-        float positionData[]={
-            -0.8f, -0.8f, 0.0f,
-            0.8f, -0.8f, 0.0f,
-            0.0f, 0.8f, 0.0f,
-        };
-        if(!positionBuffer->bufferData(9*sizeof(float), positionData)){
-            // fatal
-            return false;
-        }
-        if(!m_vao->bind(0, positionBuffer)){
-            // fatal
-            return false;
-        }
+    // interleaved
+    // pos, color
+    float interleavedData[]={
+        /*pos*/ -0.8f, -0.8f, 0.0f, /*color*/ 1.0f, 0.0f, 0.0f,
+        /*pos*/ 0.8f, -0.8f, 0.0f, /*color*/ 0.0f, 1.0f, 0.0f,
+        /*pos*/ 0.0f, 0.8f, 0.0f, /*color*/ 0.0f, 0.0f, 1.0f,
+    };
+
+    // interleaved single vbo
+    auto interleavedBuffer=std::make_shared<VBO>();
+    if(!interleavedBuffer->bufferData(sizeof(interleavedData), interleavedData)){
+        // fatal
+        return false;
     }
 
-    {
-        auto colorBuffer=std::make_shared<VBO>();
-        float colorData[]={
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f,
-        };
-        if(!colorBuffer->bufferData(9*sizeof(float), colorData)){
-            // fatal
-            return false;
-        }
-        if(!m_vao->bind(1, colorBuffer)){
-            // fatal
-            return false;
-        }
+    if(!m_vao->bind(0, interleavedBuffer, 6*sizeof(float), 0)){
+        // fatal
+        return false;
+    }
+    if(!m_vao->bind(1, interleavedBuffer, 6*sizeof(float), 3*sizeof(float))){
+        // fatal
+        return false;
     }
 
-    {
-        GLuint indexData[]={
-            0, 1, 2,
-        };
-        if(!m_vao->bufferData(3*sizeof(GLuint), indexData)){
-            assert(false);
-            // fatal
-            return false;
-        }
+    // index buffer
+    GLuint indexData[]={
+        0, 1, 2,
+    };
+    if(!m_vao->bufferData(3*sizeof(GLuint), indexData)){
+        assert(false);
+        // fatal
+        return false;
     }
 
     return true;

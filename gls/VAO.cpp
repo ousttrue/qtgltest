@@ -19,25 +19,27 @@ VAO::~VAO()
     }
 }
 
-bool VAO::bind(int channel, std::shared_ptr<VBO> vbo)
+bool VAO::bind(int channel, std::shared_ptr<VBO> vbo,
+        unsigned int stride, unsigned int offset)
 {
     if(!m_handle){
         glGenVertexArrays(1, &m_handle);
         if(!m_handle){
             return false;
         }
+        m_vbo=vbo;
     }
     glBindVertexArray(m_handle);
 
     glEnableVertexAttribArray(channel);
     glBindBuffer(GL_ARRAY_BUFFER, vbo->getHandle());
-    glVertexAttribPointer(channel, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
+    glVertexAttribPointer(channel, 3, GL_FLOAT, GL_FALSE, 
+            stride, (const GLvoid*)offset);
 
-    m_map.insert(std::make_pair(channel, vbo));
     return true;
 }
 
-bool VAO::bufferData(size_t byte_size, GLuint *data)
+bool VAO::bufferData(unsigned int byte_size, GLuint *data)
 {
     glGenBuffers(1, &m_indexHandle);
     if(!m_indexHandle){
