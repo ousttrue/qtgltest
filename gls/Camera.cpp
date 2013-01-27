@@ -26,12 +26,3 @@ Camera::~Camera()
 {
 }
 
-void Camera::apply()/*override*/
-{
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(m_projection);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixf(m_view);
-}
-

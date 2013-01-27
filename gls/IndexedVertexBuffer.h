@@ -1,5 +1,4 @@
 #pragma once
-#include "IDrawable.h"
 #include <memory>
 #include <vector>
 
@@ -21,13 +20,13 @@ struct Vertex
 };
 class ShaderProgram;
 class VAO;
-class IndexedVertexBuffer: public IDrawable
+class IndexedVertexBuffer
 {
     std::shared_ptr<ShaderProgram> m_program;
     std::shared_ptr<VAO> m_vao;
 
     std::vector<Vertex> m_vertices;
-    std::vector<GLuint> m_indices;
+    std::vector<unsigned int> m_indices;
 
 public:
     IndexedVertexBuffer();

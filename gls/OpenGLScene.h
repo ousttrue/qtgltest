@@ -3,13 +3,13 @@
 #include <list>
 
 
-class ICamera;
-class IDrawable;
+class Camera;
+class IndexedVertexBuffer;
 class ShaderProgram;
 class OpenGLScene
 {
-    std::shared_ptr<ICamera> m_camera;
-    std::list<std::shared_ptr<IDrawable>> m_drawables;
+    std::shared_ptr<Camera> m_camera;
+    std::list<std::shared_ptr<IndexedVertexBuffer>> m_drawables;
     std::shared_ptr<ShaderProgram> m_program;
 
 public:
