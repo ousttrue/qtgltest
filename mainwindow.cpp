@@ -21,9 +21,14 @@ MainWindow::MainWindow(QWidget *parent)
             Qt::LeftDockWidgetArea
             );
 
-
     auto glv=new GLView();
     setCentralWidget(glv);
+
+    // file menu
+    auto file=menuBar()->addMenu(tr("&File"));
+    auto quit=new QAction("&Quit", this);
+    file->addAction(quit);
+    connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
 void MainWindow::setupDock(QWidget *w, const QString &dockTitle, 
