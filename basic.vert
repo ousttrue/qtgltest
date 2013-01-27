@@ -18,7 +18,7 @@ uniform mat4 MVP;
 void main()
 {
     vec3 tnorm=normalize(NormalMatrix * VertexNormal);
-    vec4 eyeCoords=ModelViewMatrix * vec4(VertexPosition, 1.0));
+    vec4 eyeCoords=ModelViewMatrix * vec4(VertexPosition, 1.0);
     vec3 s=normalize(vec3(LightPosition-eyeCoords));
 
     LightIntensity=Ld * Kd * max(dot(s, tnorm), 0.0);
