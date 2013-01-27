@@ -36,15 +36,19 @@ public:
         return !((*this)==rhs);
     }
 
-
     int toInt()
     {
-        return atoi(m_begin);
+        //return atoi(std::string(m_begin, m_end).c_str());
+        int num=0;
+        for(auto it=m_begin; it!=m_end; ++it){
+            num=num*10+((*it)-'0');
+        }
+        return num;
     }
 
     float toFloat()
     {
-        return atof(m_begin);
+        return atof(std::string(m_begin, m_end).c_str());
     }
 };
 
@@ -59,6 +63,12 @@ public:
     Line(const char* begin, const char* end)
     : m_line(begin, end), m_pos(0)
     {
+    }
+
+    void assign(const char* begin, const char* end)
+    {
+        m_line=FixedString(begin, end);
+        m_pos=0;
     }
 
     bool operator==(const char *rhs)const
@@ -111,7 +121,7 @@ public:
     {
     }
 
-    Line gets()
+    Line &gets(Line &line)
     {
         m_buffer.clear();
         for(; m_pos<m_size; ++m_pos){
@@ -123,9 +133,12 @@ public:
             m_buffer.push_back(c);
         }
         if(m_buffer.empty()){
-            return Line(0, 0);
+            line.assign(0, 0);
         }
-        return Line(&m_buffer[0], &m_buffer[0]+m_buffer.size());
+        else{
+            line.assign(&m_buffer[0], &m_buffer[0]+m_buffer.size());
+        }
+        return line;
     }
 
     bool eof()const
@@ -147,33 +160,33 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateCube(float fSize
 {
     auto buffer=std::make_shared<IndexedVertexBuffer>();
     const float cube_vertices [8][3] = {
-        {1.0, 1.0, 1.0}, 
-        {1.0, -1.0, 1.0}, 
-        {-1.0, -1.0, 1.0}, 
+        {1.0, 1.0, 1.0},
+        {1.0, -1.0, 1.0},
+        {-1.0, -1.0, 1.0},
         {-1.0, 1.0, 1.0},
-        {1.0, 1.0, -1.0}, 
-        {1.0, -1.0, -1.0}, 
-        {-1.0, -1.0, -1.0}, 
-        {-1.0, 1.0, -1.0} 
+        {1.0, 1.0, -1.0},
+        {1.0, -1.0, -1.0},
+        {-1.0, -1.0, -1.0},
+        {-1.0, 1.0, -1.0}
     };
     const float cube_vertex_colors [8][3] = {
-        {1.0, 1.0, 1.0}, 
-        {1.0, 1.0, 0.0}, 
-        {0.0, 1.0, 0.0}, 
+        {1.0, 1.0, 1.0},
+        {1.0, 1.0, 0.0},
+        {0.0, 1.0, 0.0},
         {0.0, 1.0, 1.0},
-        {1.0, 0.0, 1.0}, 
-        {1.0, 0.0, 0.0}, 
-        {0.0, 0.0, 0.0}, 
-        {0.0, 0.0, 1.0} 
+        {1.0, 0.0, 1.0},
+        {1.0, 0.0, 0.0},
+        {0.0, 0.0, 0.0},
+        {0.0, 0.0, 1.0}
     };
     int cube_num_faces = 6;
     const short cube_faces [6][4] = {
-        {3, 2, 1, 0}, 
-        {2, 3, 7, 6}, 
-        {0, 1, 5, 4}, 
-        {3, 0, 4, 7}, 
-        {1, 2, 6, 5}, 
-        {4, 5, 6, 7} 
+        {3, 2, 1, 0},
+        {2, 3, 7, 6},
+        {0, 1, 5, 4},
+        {3, 0, 4, 7},
+        {1, 2, 6, 5},
+        {4, 5, 6, 7}
     };
     for(size_t i=0; i<8; ++i){
         buffer->pushVertex(Vertex(
@@ -232,11 +245,12 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPLY(
 
     TextReader reader(data, size);
 
-    if(reader.gets()!="ply"){
+    Line line(0, 0);
+    if(reader.gets(line)!="ply"){
         return std::shared_ptr<IndexedVertexBuffer>();
     }
 
-    if(reader.gets()!="format ascii 1.0"){
+    if(reader.gets(line)!="format ascii 1.0"){
         return std::shared_ptr<IndexedVertexBuffer>();
     }
 
@@ -244,7 +258,7 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPLY(
     unsigned int faceCount=0;
 
     while(!reader.eof()){
-        auto line=reader.gets();
+        reader.gets(line);
         if(line=="end_header"){
             break;
         }
@@ -264,7 +278,7 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPLY(
     }
 
     for(unsigned int i=0; i<vertexCount; ++i){
-        auto line=reader.gets();        
+        reader.gets(line);
         float x=line.get().toFloat();
         float y=line.get().toFloat();
         float z=line.get().toFloat();
@@ -272,7 +286,7 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPLY(
     }
 
     for(unsigned int i=0; i<faceCount; ++i){
-        auto line=reader.gets();
+        reader.gets(line);
         int faceIndexCount=line.get().toInt();
         assert(faceIndexCount==3);
         int i0=line.get().toInt();
