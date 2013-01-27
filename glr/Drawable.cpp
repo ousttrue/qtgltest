@@ -17,11 +17,18 @@ bool Drawable::initialize(std::shared_ptr<IndexedVertexBuffer> buffer)
 
     // VAO
     m_vao=std::make_shared<VAO>();
-    if(!m_vao->bind(0, vbo, 6*sizeof(float), 0)){
+    // pos
+    if(!m_vao->bind(0, vbo, sizeof(Vertex), 0*sizeof(float))){
         // fatal
         return false;
     }
-    if(!m_vao->bind(1, vbo, 6*sizeof(float), 3*sizeof(float))){
+    // normal
+    if(!m_vao->bind(1, vbo, sizeof(Vertex), 3*sizeof(float))){
+        // fatal
+        return false;
+    }
+    // rgb
+    if(!m_vao->bind(2, vbo, sizeof(Vertex), 6*sizeof(float))){
         // fatal
         return false;
     }

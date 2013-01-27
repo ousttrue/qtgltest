@@ -9,17 +9,22 @@ struct Vertex
     float x;
     float y;
     float z;
+    float nx;
+    float ny;
+    float nz;
     float r;
     float g;
     float b;
 
     Vertex(){}
     Vertex(float _x, float _y, float _z)
-        : x(_x), y(_y), z(_z), r(0), g(0), b(0)
+        : x(_x), y(_y), z(_z), nx(0), ny(0), nz(0), r(0), g(0), b(0)
     {
     }
-    Vertex(float _x, float _y, float _z, float _r, float _g, float _b)
-        : x(_x), y(_y), z(_z), r(_r), g(_g), b(_b)
+    Vertex(float _x, float _y, float _z, 
+            float _nx, float _ny, float _nz,
+            float _r, float _g, float _b)
+        : x(_x), y(_y), z(_z), nx(_nx), ny(_ny), nz(_nz), r(_r), g(_g), b(_b)
     {
     }
 };

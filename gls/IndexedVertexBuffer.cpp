@@ -6,6 +6,70 @@
 #include "TextReader.h"
 
 
+class BinaryReader
+{
+    const char* m_data;
+    unsigned int m_size;
+    unsigned int m_pos;
+
+public:
+    BinaryReader(const char* data, unsigned int size)
+        : m_data(data), m_size(size), m_pos(0)
+    {
+    }
+
+    const char* current()const
+    {
+        return &m_data[m_pos];
+    }
+
+    std::string getString(unsigned int size)
+    {
+        const char* end=current();
+        for(unsigned int i=0; i<size; ++i, ++end){
+            if(*end=='\0'){
+                break;
+            }
+        }
+        std::string s(current(), end);
+        m_pos+=size;
+        return s;
+    }
+
+    template<typename T>
+        T get()
+        {
+            T t= *((T*)current());
+            m_pos+=sizeof(T);
+            return t;
+        }
+
+    float getFloat()
+    {
+        return get<float>();
+    }
+
+    unsigned long getUInt(unsigned int size)
+    {
+        switch(size)
+        {
+            case 1:
+                return get<unsigned char>();
+
+            case 2:
+                return get<unsigned short>();
+
+            case 4:
+                return get<unsigned long>();
+
+            default:
+                assert(false);
+                return 0;
+        }
+    }
+};
+
+
 IndexedVertexBuffer::IndexedVertexBuffer()
 {
 }
@@ -51,6 +115,7 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateCube(float fSize
                     cube_vertices[i][0] * fSize,
                     cube_vertices[i][1] * fSize,
                     cube_vertices[i][2] * fSize,
+                    0, 0, 0,
                     cube_vertex_colors[i][0],
                     cube_vertex_colors[i][1],
                     cube_vertex_colors[i][2]
@@ -83,13 +148,19 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateTriangle()
 {
     auto buffer=std::make_shared<IndexedVertexBuffer>();
     buffer->pushVertex(Vertex(
-                /*pos*/ -0.8f, -0.8f, 0.0f, /*color*/ 1.0f, 0.0f, 0.0f
+                /*pos*/ -0.8f, -0.8f, 0.0f, 
+                /*normal*/ 0, 0, 1.0f,
+                /*color*/ 1.0f, 0.0f, 0.0f
                 ));
     buffer->pushVertex(Vertex(
-                /*pos*/ 0.8f, -0.8f, 0.0f, /*color*/ 0.0f, 1.0f, 0.0f
+                /*pos*/ 0.8f, -0.8f, 0.0f, 
+                /*normal*/ 0, 0, 1.0f,
+                /*color*/ 0.0f, 1.0f, 0.0f
                 ));
     buffer->pushVertex(Vertex(
-                /*pos*/ 0.0f, 0.8f, 0.0f, /*color*/ 0.0f, 0.0f, 1.0f
+                /*pos*/ 0.0f, 0.8f, 0.0f, 
+                /*normal*/ 0, 0, 1.0f,
+                /*color*/ 0.0f, 0.0f, 1.0f
                 ));
     buffer->addTriangle(0, 1, 2);
     return buffer;
@@ -100,6 +171,43 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPMD(
         char *data, unsigned int size)
 {
     auto buffer=std::make_shared<IndexedVertexBuffer>();
+
+    BinaryReader reader(data, size);
+
+    std::string sig=reader.getString(3); 
+    if(sig!="Pmd"){
+        return std::shared_ptr<IndexedVertexBuffer>();
+    }
+
+    float version=reader.getFloat();
+    if(version!=1.0f){
+        return std::shared_ptr<IndexedVertexBuffer>();
+    }
+
+    std::string name=reader.getString(20);
+    std::string comment=reader.getString(256);
+
+    unsigned long vertexCount=reader.getUInt(4);
+    for(unsigned long i=0; i<vertexCount; ++i){
+        float x=reader.getFloat();
+        float y=reader.getFloat();
+        float z=reader.getFloat();
+        float nx=reader.getFloat();
+        float ny=reader.getFloat();
+        float nz=reader.getFloat();
+        float u=reader.getFloat();
+        float v=reader.getFloat();
+        unsigned short b0=reader.get<unsigned short>();
+        unsigned short b1=reader.get<unsigned short>();
+        unsigned char w0=reader.get<unsigned char>();
+        unsigned char flag=reader.get<unsigned char>();
+
+        buffer->pushVertex(Vertex(
+			x, y, z,
+			nx, ny, nz,
+			0, 0, 0));
+    }
+
     return buffer;
 }
 
