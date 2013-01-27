@@ -21,6 +21,7 @@ end
 configuration "gmake"
 do
     buildoptions {
+        "-Wall",
         "-std=c++0x",
     }
 end

@@ -60,10 +60,18 @@ void Camera::dolly(int d)
     calcViewMatrix();
 }
 
+void Camera::shift(float x, float y)
+{
+    float FACTOR=0.5f;
+    m_shiftX+=x * FACTOR * m_distance;
+    m_shiftY+=y * FACTOR * m_distance;;
+    calcViewMatrix();
+}
+
 void Camera::calcViewMatrix()
 {
     glm::mat4 v(1.0f);
-    v=glm::translate(v, glm::vec3(0, 0, -m_distance));
+    v=glm::translate(v, glm::vec3(m_shiftX, m_shiftY, -m_distance));
     v=glm::rotate(v, toRadian(m_pitchDeglee), glm::vec3(1.0f, 0, 0));
     v=glm::rotate(v, toRadian(m_headDeglee), glm::vec3(0, 1.0f, 0));
 

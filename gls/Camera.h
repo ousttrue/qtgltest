@@ -14,20 +14,23 @@ class Camera
     float m_headDeglee;
     float m_pitchDeglee;
     float m_distance;;
+    float m_shiftX;
+    float m_shiftY;
     float m_view[16];
 
 public:
     Camera();
     ~Camera();
     // projection
-    float *getProjectionMatrix()/*override*/{ return m_projection; }
+    float *getProjectionMatrix(){ return m_projection; }
     void resize(int w, int h);
 
     // view
-    float *getViewMatrix()/*override*/{ return m_view; }
+    float *getViewMatrix(){ return m_view; }
     void head(float d);
     void pitch(float d);
     void dolly(int d);
+    void shift(float x, float y);
 
 private:
     void calcViewMatrix();

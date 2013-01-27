@@ -92,6 +92,10 @@ bool OpenGLScene::onMouseMove(int x, int y)
     if(m_mouseLeft){
     }
     if(m_mouseMiddle){
+        float min=m_w<m_h ? m_w : m_h;
+        float ratio=1.0f/min;
+        m_camera->shift(dx*ratio, -dy*ratio);
+        repaint=true;
     }
     if(m_mouseRight){
         float min=m_w<m_h ? m_w : m_h;
