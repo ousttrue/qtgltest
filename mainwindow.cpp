@@ -65,7 +65,11 @@ void MainWindow::onOpen()
     QString path = QFileDialog::getOpenFileName(
             this, tr("Open File"),
             ".",
-            tr("ply file (*.ply)"));
+            tr(
+                "pmd file (*.pmd)"
+                ";;ply file (*.ply)"
+                ";;all file (*.*)"
+                ));
     if(path.isEmpty()){
         return;
     }
@@ -88,8 +92,22 @@ void MainWindow::onOpen()
         return;
     }
 
-    auto model=IndexedVertexBuffer::CreateFromPLY(path.toUtf8().data(),
-            &buffer[0], buffer.size());
+    QFileInfo info(path);
+    QString ext=info.suffix().toLower();
+    std::shared_ptr<IndexedVertexBuffer> model;
+    if(ext=="ply"){
+        model=IndexedVertexBuffer::CreateFromPLY(path.toUtf8().data(),
+                &buffer[0], buffer.size());
+    }
+    if(ext=="pmd"){
+        model=IndexedVertexBuffer::CreateFromPMD(path.toUtf8().data(),
+                &buffer[0], buffer.size());
+	}
+    else{
+        logging(QString("unknown extension: %1").arg(ext));
+        return;
+    }
+
     if(!model){
         logging("fail to read model");
         return;

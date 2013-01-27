@@ -38,17 +38,19 @@ public:
 
     int toInt()
     {
-        //return atoi(std::string(m_begin, m_end).c_str());
+        return atoi(std::string(m_begin, m_end).c_str());
+		/*
         int num=0;
         for(auto it=m_begin; it!=m_end; ++it){
             num=num*10+((*it)-'0');
         }
         return num;
+		*/
     }
 
     float toFloat()
     {
-        return atof(std::string(m_begin, m_end).c_str());
+        return static_cast<float>(atof(std::string(m_begin, m_end).c_str()));
     }
 };
 
@@ -179,7 +181,7 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateCube(float fSize
         {0.0, 0.0, 0.0},
         {0.0, 0.0, 1.0}
     };
-    int cube_num_faces = 6;
+    size_t cube_num_faces = 6;
     const short cube_faces [6][4] = {
         {3, 2, 1, 0},
         {2, 3, 7, 6},
@@ -234,6 +236,14 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateTriangle()
                 /*pos*/ 0.0f, 0.8f, 0.0f, /*color*/ 0.0f, 0.0f, 1.0f
                 ));
     buffer->addTriangle(0, 1, 2);
+    return buffer;
+}
+
+std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPMD(
+        const std::string &utf8path,
+        char *data, unsigned int size)
+{
+    auto buffer=std::make_shared<IndexedVertexBuffer>();
     return buffer;
 }
 

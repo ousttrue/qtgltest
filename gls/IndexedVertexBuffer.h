@@ -75,6 +75,9 @@ public:
     static std::shared_ptr<IndexedVertexBuffer> CreateTriangle();
     static std::shared_ptr<IndexedVertexBuffer> CreateCube(float size);
 
+    static std::shared_ptr<IndexedVertexBuffer> CreateFromPMD(
+            const std::string &utf8path,
+            char *data, unsigned int size);
     static std::shared_ptr<IndexedVertexBuffer> CreateFromPLY(
             const std::string &utf8path,
             char *data, unsigned int size);
