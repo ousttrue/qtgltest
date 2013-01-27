@@ -18,7 +18,8 @@ static float toRadian(float deglee)
 
 Camera::Camera()
     : m_headDeglee(0), m_pitchDeglee(0), m_distance(10.0f),
-    m_fovy(30.0f), m_aspect(1.0f), m_near(0.5f), m_far(100.0f)
+    m_fovy(30.0f), m_aspect(1.0f), m_near(0.5f), m_far(100.0f),
+    m_shiftX(0), m_shiftY(0)
 {
     calcViewMatrix();
     calcProjectionMatrix();

@@ -26,7 +26,6 @@ class OpenGLScene
 public:
     OpenGLScene();
     ~OpenGLScene();
-    bool initialize();
     void update(int ms);
     void resize(int w, int h);
     std::shared_ptr<Camera> getCamera(){ return m_camera; }

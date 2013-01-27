@@ -23,7 +23,10 @@ void GLView::animate()
 
 void GLView::initializeGL()
 {
-    m_gl->initialize();
+    if(!m_gl->initialize()){
+        logging("fail to OpenGLRenderer::initialize");
+        return;
+    }
 	qglClearColor(Qt::lightGray);
 }
 
