@@ -3,9 +3,8 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
-#include <GL/gl.h>
-#include <GL/glu.h>
-
+#include <GL/glew.h>
+//#include <GL/gl.h>
 
 
 OpenGLRenderer::OpenGLRenderer()
@@ -21,6 +20,12 @@ OpenGLRenderer::~OpenGLRenderer()
 
 void OpenGLRenderer::initialize()
 {
+	GLenum err=glewInit();
+	if(err!=GLEW_OK){
+		// fatal
+        return;
+	}
+
     glEnable(GL_DEPTH_TEST);
 }
 

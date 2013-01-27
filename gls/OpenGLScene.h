@@ -13,9 +13,8 @@ class OpenGLScene
 public:
     OpenGLScene();
     ~OpenGLScene();
+    bool initialize();
     void update(int ms);
     void render();
-
-private:
 };
 

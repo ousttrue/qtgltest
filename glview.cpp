@@ -21,6 +21,7 @@ void GLView::animate()
 void GLView::initializeGL()
 {
     m_gl->initialize();
+	qglClearColor(Qt::lightGray);
 }
 
 void GLView::resizeGL(int width, int height)

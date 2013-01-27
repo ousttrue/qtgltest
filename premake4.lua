@@ -81,6 +81,7 @@ links {
     "glr",
     "gls",
     "GLU",
+    "GLEW",
 }
 linkoptions {
 }

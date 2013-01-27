@@ -1,5 +1,9 @@
 #include "Cube.h"
-#include <GL/gl.h>
+#include "Shader.h"
+#include "ShaderProgram.h"
+#include "VBO.h"
+#include "VAO.h"
+#include <iostream>
 
 
 static GLuint initPolyList()
@@ -78,7 +82,80 @@ Cube::~Cube()
 {
 }
 
-void Cube::draw()/*override*/
+static std::shared_ptr<Shader> loadShader(GLenum shader_type, const char *path)
+{
+    auto shader=std::make_shared<Shader>();
+    if(!shader->loadFile(shader_type, path)){
+        return std::shared_ptr<Shader>();
+    }
+    return shader;
+}
+
+bool Cube::initialize()
+{
+    auto vert=loadShader(GL_VERTEX_SHADER, "basic.vert");
+    if(!vert){
+        // fatal
+        return false;
+    }
+
+    auto frag=loadShader(GL_FRAGMENT_SHADER, "basic.frag");
+    if(!frag){
+        // fatal
+        return false;
+    }
+
+    m_program=std::make_shared<ShaderProgram>();
+    if(!m_program->link(vert, frag)){
+        // fatal
+        return false;
+    }
+
+    // VAO
+    m_vao=std::make_shared<VAO>();
+
+    // create vbo
+    {
+        auto positionBuffer=std::make_shared<VBO>();
+        float positionData[]={
+            -0.8f, -0.8f, 0.0f,
+            0.8f, -0.8f, 0.0f,
+            0.0f, 0.8f, 0.0f,
+        };
+        if(!positionBuffer->bufferData(9*sizeof(float), positionData)){
+            // fatal
+            return false;
+        }
+        if(!m_vao->bind(0, positionBuffer)){
+            // fatal
+            return false;
+        }
+    }
+
+    {
+        auto colorBuffer=std::make_shared<VBO>();
+        float colorData[]={
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f,
+        };
+        if(!colorBuffer->bufferData(9*sizeof(float), colorData)){
+            // fatal
+            return false;
+        }
+        if(!m_vao->bind(1, colorBuffer)){
+            // fatal
+            return false;
+        }
+    }
+
+
+std::cout << "initialized !" << std::endl;
+
+    return true;
+}
+
+void Cube::draw()
 {
     if (!m_polyList) {
         m_polyList=initPolyList();
@@ -90,5 +167,10 @@ void Cube::draw()/*override*/
     glDisable(GL_LIGHTING);	// Just use colours.
     glCallList(m_polyList);	// Draw the cube.
     glPopMatrix();	// Restore world coordinate system.
+}
+
+int Cube::getTriangleCount()
+{
+    return 3;
 }
 
