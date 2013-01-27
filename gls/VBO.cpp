@@ -14,7 +14,7 @@ VBO::~VBO()
     }
 }
 
-bool VBO::bufferData(size_t byte_size, float *data)
+bool VBO::bufferData(size_t byte_size, void *data)
 {
     glGenBuffers(1, &m_handle);
     if(!m_handle){

@@ -10,6 +10,6 @@ public:
     VBO();
     ~VBO();
     GLuint getHandle()const{ return m_handle; }
-    bool bufferData(size_t byte_size, float *data);
+    bool bufferData(size_t byte_size, void *data);
 };
 
