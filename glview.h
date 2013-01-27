@@ -15,7 +15,7 @@ Q_OBJECT
     std::shared_ptr<OpenGLScene> m_scene;
 
 public:
-    GLView(QWidget *parent = 0);
+    GLView(std::shared_ptr<OpenGLScene> scene, QWidget *parent = 0);
     ~GLView();
 
 public slots:

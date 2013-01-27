@@ -23,3 +23,8 @@ void OpenGLScene::resize(int w, int h)
 {
 }
 
+void OpenGLScene::addBuffer(std::shared_ptr<IndexedVertexBuffer> buffer)
+{
+    m_drawables.push_back(buffer);
+}
+

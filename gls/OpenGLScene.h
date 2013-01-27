@@ -21,5 +21,8 @@ public:
     std::shared_ptr<Camera> getCamera(){ return m_camera; }
     DrawableList::iterator begin(){ return m_drawables.begin(); }
     DrawableList::iterator end(){ return m_drawables.end(); }
+
+    void clear(){ m_drawables.clear(); }
+    void addBuffer(std::shared_ptr<IndexedVertexBuffer> buffer);
 };
 

@@ -4,8 +4,8 @@
 #include <QTimer>
 
 
-GLView::GLView(QWidget *parent)
-: QGLWidget(parent), m_scene(new OpenGLScene), m_elapsed(0)
+GLView::GLView(std::shared_ptr<OpenGLScene> scene, QWidget *parent)
+: QGLWidget(parent), m_scene(scene), m_elapsed(0)
 {
     m_gl=std::make_shared<OpenGLRenderer>();
 }

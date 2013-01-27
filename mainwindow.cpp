@@ -3,10 +3,12 @@
 #include "loggingwidget.h"
 #include "scenetreewidget.h"
 #include "glview.h"
+#include "OpenGLScene.h"
+#include "IndexedVertexBuffer.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
-: QMainWindow(parent)
+: QMainWindow(parent), m_scene(new OpenGLScene)
 {
     m_logging=new LoggingWidget;
     setupDock(m_logging,
@@ -21,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
             Qt::LeftDockWidgetArea
             );
 
-    auto glv=new GLView();
+    auto glv=new GLView(m_scene);
     setCentralWidget(glv);
 
     // file menu
@@ -59,6 +61,30 @@ void MainWindow::onOpen()
     if(path.isEmpty()){
         return;
     }
+
+    QFile file(path);
+    if(!file.open(QIODevice::ReadOnly)){
+        logging(QString("fail to open %1").arg(path));
+        return;
+    }
     logging(QString("open %1").arg(path));
+
+    std::vector<unsigned char> buffer(file.size());
+    if(buffer.empty()){
+        logging("empty file");
+        return;
+    }
+
+    QDataStream in(&file);
+    if(in.readRawData((char*)&buffer[0], buffer.size())==-1){
+        logging("fail to read");
+        return;
+    }
+
+    auto model=IndexedVertexBuffer::CreateFromPLY(path.toUtf8().data(),
+            &buffer[0], buffer.size());
+
+    m_scene->clear();
+    m_scene->addBuffer(model);
 }
 

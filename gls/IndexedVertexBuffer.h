@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <string>
 
 
 struct Vertex
@@ -22,6 +23,8 @@ class IndexedVertexBuffer
 {
     std::vector<Vertex> m_vertices;
     std::vector<unsigned int> m_indices;
+
+    std::string m_utf8path;
 
 public:
     IndexedVertexBuffer();
@@ -67,5 +70,9 @@ public:
 
     static std::shared_ptr<IndexedVertexBuffer> CreateTriangle();
     static std::shared_ptr<IndexedVertexBuffer> CreateCube(float size);
+
+    static std::shared_ptr<IndexedVertexBuffer> CreateFromPLY(
+            const std::string &utf8path,
+            unsigned char *data, unsigned int size);
 };
 

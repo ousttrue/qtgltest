@@ -1,12 +1,15 @@
 #include <QMainWindow>
+#include <memory>
 
 
 class LoggingWidget;
+class OpenGLScene;
 class MainWindow: public QMainWindow
 {
 Q_OBJECT
 
     LoggingWidget *m_logging;
+    std::shared_ptr<OpenGLScene> m_scene;
 
 public:
     MainWindow(QWidget *parent=0);
