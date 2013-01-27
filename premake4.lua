@@ -61,7 +61,8 @@ includedirs {
     "/usr/include/qt4/QtGui",
     "/usr/include/qt4/QtOpenGL",
 
-    "glw",
+    "gls",
+    "glr",
 }
 defines {
 }
@@ -77,7 +78,8 @@ links {
     "QtGui",
     "QtOpenGL",
 
-    "glw",
+    "glr",
+    "gls",
     "GLU",
 }
 linkoptions {
@@ -87,7 +89,7 @@ linkoptions {
 ------------------------------------------------------------------------------
 -- Project
 ------------------------------------------------------------------------------
-project "glw"
+project "gls"
 --language "C"
 language "C++"
 kind "StaticLib"
@@ -99,7 +101,7 @@ flags {
     "Unicode",
 }
 files {
-    "glw/*.cpp", "glw/*.h",
+    "gls/*.cpp", "gls/*.h",
 }
 prebuildcommands {
 }
@@ -112,11 +114,37 @@ defines {
 buildoptions {
 }
 
+------------------------------------------------------------------------------
+-- Project
+------------------------------------------------------------------------------
+project "glr"
+--language "C"
+language "C++"
+kind "StaticLib"
+--kind "SharedLib"
+--kind "ConsoleApp"
+--kind "WindowedApp"
+
+flags {
+    "Unicode",
+}
+files {
+    "glr/*.cpp", "glr/*.h",
+}
+prebuildcommands {
+}
+
+-- compile
+includedirs {
+    "gls",
+}
+defines {
+}
+buildoptions {
+}
+
 -- link
-libdirs {
-}
 links {
-}
-linkoptions {
+    "gls",
 }
 
