@@ -11,6 +11,11 @@ Q_OBJECT
 public:
     MainWindow(QWidget *parent=0);
 
+signals:
+    void logging(const QString &message);
+
+public slots:
+    void onOpen();
 
 private:
     void setupDock(QWidget *w, const QString &dockTitle, 
