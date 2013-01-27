@@ -67,23 +67,27 @@ void MainWindow::onOpen()
         logging(QString("fail to open %1").arg(path));
         return;
     }
-    logging(QString("open %1").arg(path));
 
-    std::vector<unsigned char> buffer(file.size());
+    std::vector<char> buffer(file.size());
     if(buffer.empty()){
         logging("empty file");
         return;
     }
 
     QDataStream in(&file);
-    if(in.readRawData((char*)&buffer[0], buffer.size())==-1){
-        logging("fail to read");
+    if(in.readRawData(&buffer[0], buffer.size())==-1){
+        logging("fail to read file");
         return;
     }
 
     auto model=IndexedVertexBuffer::CreateFromPLY(path.toUtf8().data(),
             &buffer[0], buffer.size());
+    if(!model){
+        logging("fail to read model");
+        return;
+    }
 
+    logging(QString("open %1").arg(path));
     m_scene->clear();
     m_scene->addBuffer(model);
 }

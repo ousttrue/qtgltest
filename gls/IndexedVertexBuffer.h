@@ -14,6 +14,10 @@ struct Vertex
     float b;
 
     Vertex(){}
+    Vertex(float _x, float _y, float _z)
+        : x(_x), y(_y), z(_z), r(0), g(0), b(0)
+    {
+    }
     Vertex(float _x, float _y, float _z, float _r, float _g, float _b)
         : x(_x), y(_y), z(_z), r(_r), g(_g), b(_b)
     {
@@ -73,6 +77,6 @@ public:
 
     static std::shared_ptr<IndexedVertexBuffer> CreateFromPLY(
             const std::string &utf8path,
-            unsigned char *data, unsigned int size);
+            char *data, unsigned int size);
 };
 
