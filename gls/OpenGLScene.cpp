@@ -52,8 +52,20 @@ void OpenGLScene::render()
                 glm::make_mat4(m_camera->getViewMatrix()));
         //glm::make_mat4
 
+        // set vertex buffer
         glBindVertexArray((*it)->getVAO()->getHandle());
-        glDrawArrays(GL_TRIANGLES, 0, (*it)->getTriangleCount());
+        // set index buffer
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*it)->getVAO()->getIndexHandle());
+
+        // draw each submesh
+        unsigned int offset=0;
+        int submeshCount=(*it)->getSubMeshCount();
+        for(int i=0; i<submeshCount; ++i){
+            unsigned int indexCount=(*it)->getTriangleCount(i)*3;
+            glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 
+                    (const GLvoid*)offset);
+            offset+=indexCount;
+        }
     }
 #endif
 }

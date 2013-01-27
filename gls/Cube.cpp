@@ -149,28 +149,27 @@ bool Cube::initialize()
         }
     }
 
-
-std::cout << "initialized !" << std::endl;
+    {
+        GLuint indexData[]={
+            0, 1, 2,
+        };
+        if(!m_vao->bufferData(3*sizeof(GLuint), indexData)){
+            assert(false);
+            // fatal
+            return false;
+        }
+    }
 
     return true;
 }
 
-void Cube::draw()
+unsigned int Cube::getSubMeshCount()
 {
-    if (!m_polyList) {
-        m_polyList=initPolyList();
-    }
-
-    glPushMatrix(); // Save world coordinate system.
-    glTranslatef(0.0, 0.0, 0.5); // Place base of cube on marker surface.
-    //glRotatef(gDrawRotateAngle, 0.0, 0.0, 1.0); // Rotate about z axis.
-    glDisable(GL_LIGHTING);	// Just use colours.
-    glCallList(m_polyList);	// Draw the cube.
-    glPopMatrix();	// Restore world coordinate system.
+    return 1;
 }
 
-int Cube::getTriangleCount()
+unsigned int Cube::getTriangleCount(unsigned int inex)
 {
-    return 3;
+    return 1;
 }
 
