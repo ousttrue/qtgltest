@@ -1,41 +1,19 @@
 #pragma once
+#include <memory>
 
 
+class OpenGLScene;
 class OpenGLRenderer
 {
-    // draw
-    unsigned int m_polyList;
-
-    // update timer
-    int ms_prev;
-
-	int texEnvModeSave;	
-	int lightingSave;
-	int depthTestSave;
-
-    double m_projection[16];
-    double m_view[16];
+    std::shared_ptr<OpenGLScene> m_scene;
 
 public:
     OpenGLRenderer();
     ~OpenGLRenderer();
+    void initialize();
     void resize(int w, int h);
-
 	void update(int ms);
-   
 	void clear();
-    void drawImage(
-            int x, int y,
-            const unsigned char *image, 
-            int w, int h,
-            int pixFormat, int pixType);
     void render();
-
-    void keyboard(unsigned char key, int x, int y);
-
-private:
-    void drawCube();
-    void save();
-    void restore();
 };
 

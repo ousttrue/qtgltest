@@ -6,58 +6,35 @@
 #include <GL/glu.h>
 
 
-OpenGLRenderer::OpenGLRenderer()
-: m_polyList(0), ms_prev(0)
+class OpenGLScene
 {
-    glEnable(GL_DEPTH_TEST);
+    unsigned int m_polyList;
+    double m_projection[16];
+    double m_view[16];
+
+public:
+    OpenGLScene();
+    ~OpenGLScene();
+    void update(int ms);
+    void render();
+
+private:
+    void drawCube();
+};
+
+
+OpenGLScene::OpenGLScene()
+    : m_polyList(0)
+{
 }
 
-
-OpenGLRenderer::~OpenGLRenderer()
+OpenGLScene::~OpenGLScene()
 {
 }
 
-
-void OpenGLRenderer::resize(int w, int h)
+void OpenGLScene::update(int ms)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, (GLsizei) w, (GLsizei) h);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
 }
-
-
-void OpenGLRenderer::clear()
-{
-    // Select correct buffer for this context.
-    glDrawBuffer(GL_BACK);
-    // Clear the buffers for new frame.
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-}
-
-
-void OpenGLRenderer::render()
-{
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixd(m_projection);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixd(m_view);
-
-    drawCube();
-}
-
-
-void OpenGLRenderer::update(int ms)
-{
-    // Find out how long since Idle() last ran.
-    float timeDelta = (float)(ms - ms_prev) * 0.001f;
-    ms_prev = ms;
-}
-
 
 static GLuint initPolyList()
 {
@@ -127,7 +104,7 @@ static GLuint initPolyList()
 
 
 // Something to look at, draw a rotating colour cube.
-void OpenGLRenderer::drawCube()
+void OpenGLScene::drawCube()
 {
     if (!m_polyList) {
         m_polyList=initPolyList();
@@ -141,109 +118,51 @@ void OpenGLRenderer::drawCube()
     glPopMatrix();	// Restore world coordinate system.
 }
 
-void OpenGLRenderer::drawImage(
-        int x, int y,
-        const unsigned char *image, 
-        int w, int h,
-        int pixFormat, int pixType)
+void OpenGLScene::render()
 {
-	if(!image){
-		return;
-	}
-    // draw capture image
-    save();
-    {
-        glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-        int params[4];
-        glGetIntegerv(GL_VIEWPORT, (GLint *)params);
-        gluOrtho2D(
-			0, static_cast<float>(params[2]), 
-			0, static_cast<float>(params[3]));
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixd(m_projection);
 
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();		
+    glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixd(m_view);
 
-        glDisable(GL_TEXTURE_2D);
-
-		/*
-
-        float zoomf = 1.0f;
-        glPixelZoom(
-                zoomf * ((float)(params[2]) / (float)w),
-                -zoomf * ((float)(params[3]) / (float)h)
-                );
-				*/
-
-        // flip vertical
-        glPixelZoom(1.0f, -1.0f);
-		// why?
-        glRasterPos2f(
-                static_cast<float>(x), 
-                static_cast<float>(y)+static_cast<float>(h)-0.001f);
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glDrawPixels(w, h, pixFormat, pixType, image);
-    }
-    restore();
+    drawCube();
 }
 
-void OpenGLRenderer::save()
+
+//////////////////////////////////////////////////////////////////////////////
+OpenGLRenderer::OpenGLRenderer()
+: m_scene(new OpenGLScene) 
 {
-	// Prepare an orthographic projection, 
-    // set camera position for 2D drawing, and save GL state.
-
-    // Save GL texture environment mode.
-	glGetTexEnviv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, &texEnvModeSave); 
-	if (texEnvModeSave != GL_REPLACE){
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-    }
-
-    // Save enabled state of lighting.
-	lightingSave = glIsEnabled(GL_LIGHTING);
-	if (lightingSave == GL_TRUE){
-        glDisable(GL_LIGHTING);
-    }
-
-    // Save enabled state of depth test.
-	depthTestSave = glIsEnabled(GL_DEPTH_TEST);		
-	if (depthTestSave == GL_TRUE){
-        glDisable(GL_DEPTH_TEST);
-    }
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
 }
 
-void OpenGLRenderer::restore()
+
+OpenGLRenderer::~OpenGLRenderer()
 {
-	// Restore previous projection, camera position, and GL state.
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-    // Restore enabled state of depth test.
-	if (depthTestSave == GL_TRUE){
-        glEnable(GL_DEPTH_TEST);
-    }
-    // Restore enabled state of lighting.
-	if (lightingSave == GL_TRUE){
-        glEnable(GL_LIGHTING);			
-    }
-    // Restore GL texture environment mode.
-	if (texEnvModeSave != GL_REPLACE){
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, texEnvModeSave);
-    }
 }
-	
-void OpenGLRenderer::keyboard(unsigned char key, int x, int y)
+
+
+void OpenGLRenderer::initialize()
 {
-    switch(key){
-        case ' ':
-            //gDrawRotate = !gDrawRotate;
-            break;
-    }
+    glEnable(GL_DEPTH_TEST);
+}
+
+
+void OpenGLRenderer::resize(int w, int h)
+{
+    glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+}
+
+
+void OpenGLRenderer::clear()
+{
+    glDrawBuffer(GL_BACK);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+}
+
+
+void OpenGLRenderer::render()
+{
+    m_scene->render();
 }
 

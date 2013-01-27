@@ -24,7 +24,6 @@ void GLView::initializeGL()
 
 void GLView::resizeGL(int width, int height)
 {
-    glViewport(0, 0, width, height);
     m_gl->resize(width, height);
 }
 
