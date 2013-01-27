@@ -1,11 +1,14 @@
 #pragma once
+#include <memory>
+#include <list>
 
 
+class ICamera;
+class IDrawable;
 class OpenGLScene
 {
-    unsigned int m_polyList;
-    double m_projection[16];
-    double m_view[16];
+    std::shared_ptr<ICamera> m_camera;
+    std::list<std::shared_ptr<IDrawable>> m_drawables;
 
 public:
     OpenGLScene();
@@ -14,6 +17,5 @@ public:
     void render();
 
 private:
-    void drawCube();
 };
 

@@ -3,18 +3,46 @@
 #include <GL/glu.h>
 
 
-OpenGLScene::OpenGLScene()
-    : m_polyList(0)
+class ICamera
 {
-}
+public:
+    virtual ~ICamera(){}
+    virtual void apply()=0;
+};
 
-OpenGLScene::~OpenGLScene()
-{
-}
 
-void OpenGLScene::update(int ms)
+class Camera: public ICamera
 {
-}
+    double m_projection[16];
+    double m_view[16];
+public:
+    Camera()
+    {
+    }
+
+    ~Camera()
+    {
+    }
+
+    void apply()/*override*/
+    {
+        glMatrixMode(GL_PROJECTION);
+        glLoadMatrixd(m_projection);
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadMatrixd(m_view);
+    }
+};
+
+
+
+class IDrawable
+{
+public:
+    virtual ~IDrawable(){}
+    virtual void draw()=0;
+};
+
 
 static GLuint initPolyList()
 {
@@ -82,30 +110,56 @@ static GLuint initPolyList()
     return polyList;
 }
 
-
-// Something to look at, draw a rotating colour cube.
-void OpenGLScene::drawCube()
+class Cube: public IDrawable
 {
-    if (!m_polyList) {
-        m_polyList=initPolyList();
+    unsigned int m_polyList;
+
+public:
+    Cube()
+    : m_polyList(0)
+    {
     }
 
-    glPushMatrix(); // Save world coordinate system.
-    glTranslatef(0.0, 0.0, 0.5); // Place base of cube on marker surface.
-    //glRotatef(gDrawRotateAngle, 0.0, 0.0, 1.0); // Rotate about z axis.
-    glDisable(GL_LIGHTING);	// Just use colours.
-    glCallList(m_polyList);	// Draw the cube.
-    glPopMatrix();	// Restore world coordinate system.
+    ~Cube()
+    {
+    }
+
+    void draw()/*override*/
+    {
+        if (!m_polyList) {
+            m_polyList=initPolyList();
+        }
+
+        glPushMatrix(); // Save world coordinate system.
+        glTranslatef(0.0, 0.0, 0.5); // Place base of cube on marker surface.
+        //glRotatef(gDrawRotateAngle, 0.0, 0.0, 1.0); // Rotate about z axis.
+        glDisable(GL_LIGHTING);	// Just use colours.
+        glCallList(m_polyList);	// Draw the cube.
+        glPopMatrix();	// Restore world coordinate system.
+    }
+};
+
+
+OpenGLScene::OpenGLScene()
+    : m_camera(new Camera)
+{
+    m_drawables.push_back(std::make_shared<Cube>());
 }
+
+OpenGLScene::~OpenGLScene()
+{
+}
+
+void OpenGLScene::update(int ms)
+{
+}
+
 
 void OpenGLScene::render()
 {
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixd(m_projection);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixd(m_view);
-
-    drawCube();
+    m_camera->apply();
+    for(auto it=m_drawables.begin(); it!=m_drawables.end(); ++it){
+        (*it)->draw();
+    }
 }
 
