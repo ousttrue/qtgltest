@@ -4,6 +4,7 @@
 
 
 class OpenGLRenderer;
+class OpenGLScene;
 class GLView : public QGLWidget
 {
 Q_OBJECT
@@ -11,6 +12,7 @@ Q_OBJECT
     int m_elapsed;
 
     std::shared_ptr<OpenGLRenderer> m_gl;
+    std::shared_ptr<OpenGLScene> m_scene;
 
 public:
     GLView(QWidget *parent = 0);

@@ -8,7 +8,7 @@ class OpenGLRenderer
     std::shared_ptr<OpenGLScene> m_scene;
 
 public:
-    OpenGLRenderer();
+    OpenGLRenderer(std::shared_ptr<OpenGLScene> scene);
     ~OpenGLRenderer();
     void initialize();
     void resize(int w, int h);

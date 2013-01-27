@@ -1,11 +1,13 @@
 #include "glview.h"
 #include "OpenGLRenderer.h"
+#include "OpenGLScene.h"
 #include <QTimer>
 
 
 GLView::GLView(QWidget *parent)
-: QGLWidget(parent), m_gl(new OpenGLRenderer), m_elapsed(0)
+: QGLWidget(parent), m_scene(new OpenGLScene), m_elapsed(0)
 {
+    m_gl=std::make_shared<OpenGLRenderer>(m_scene);
 }
 
 GLView::~GLView()
@@ -21,6 +23,7 @@ void GLView::animate()
 void GLView::initializeGL()
 {
     m_gl->initialize();
+    m_scene->initialize();
 	qglClearColor(Qt::lightGray);
 }
 

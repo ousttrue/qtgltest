@@ -7,8 +7,8 @@
 //#include <GL/gl.h>
 
 
-OpenGLRenderer::OpenGLRenderer()
-: m_scene(new OpenGLScene) 
+OpenGLRenderer::OpenGLRenderer(std::shared_ptr<OpenGLScene> scene)
+: m_scene(scene) 
 {
 }
 
