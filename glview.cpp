@@ -20,6 +20,7 @@ void GLView::animate()
 
 void GLView::initializeGL()
 {
+    m_gl->initialize();
 }
 
 void GLView::resizeGL(int width, int height)
