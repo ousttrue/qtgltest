@@ -13,5 +13,6 @@ LoggingWidget::~LoggingWidget()
 void LoggingWidget::receive(const QString &log)
 {
     addItem(log);
+    scrollToBottom();
 }
 

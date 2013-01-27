@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent), m_scene(new OpenGLScene)
 {
     m_logging=new LoggingWidget;
+    QObject::connect(this, SIGNAL(logging(const QString &)), 
+            m_logging, SLOT(receive(const QString &))); 
+
     setupDock(m_logging,
             tr("Log"),
             Qt::BottomDockWidgetArea,
@@ -25,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto glv=new GLView(m_scene);
     setCentralWidget(glv);
+    QObject::connect(glv, SIGNAL(logging(const QString &)), 
+            m_logging, SLOT(receive(const QString &))); 
 
     // file menu
     auto file=menuBar()->addMenu(tr("&File"));
@@ -38,9 +43,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     QObject::connect(open, SIGNAL(triggered()), 
             this, SLOT(onOpen()));
-
-    QObject::connect(this, SIGNAL(logging(const QString &)), 
-            m_logging, SLOT(receive(const QString &))); 
 }
 
 void MainWindow::setupDock(QWidget *w, const QString &dockTitle, 
@@ -50,6 +52,12 @@ void MainWindow::setupDock(QWidget *w, const QString &dockTitle,
     dock->setAllowedAreas(static_cast<Qt::DockWidgetArea>(allow));
     dock->setWidget(w);
     addDockWidget(add, dock);
+
+    if(w==m_logging){
+        return;
+    }
+    QObject::connect(w, SIGNAL(logging(const QString &)), 
+            m_logging, SLOT(receive(const QString &))); 
 }
 
 void MainWindow::onOpen()

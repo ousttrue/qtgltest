@@ -52,6 +52,7 @@ files {
     "moc_mainwindow.cpp",
     "moc_loggingwidget.cpp",
     "moc_glview.cpp",
+    "moc_scenetreewidget.cpp",
 }
 
 -- compile

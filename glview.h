@@ -18,6 +18,9 @@ public:
     GLView(std::shared_ptr<OpenGLScene> scene, QWidget *parent = 0);
     ~GLView();
 
+signals:
+    void logging(const QString &message);
+
 public slots:
      void animate();
 

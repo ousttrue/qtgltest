@@ -1,5 +1,5 @@
 MOC=moc
-MOC_FILES=moc_mainwindow.cpp moc_loggingwidget.cpp moc_glview.cpp
+MOC_FILES=moc_mainwindow.cpp moc_loggingwidget.cpp moc_glview.cpp moc_scenetreewidget.cpp
 
 
 moc: $(MOC_FILES)
@@ -11,5 +11,8 @@ moc_loggingwidget.cpp: loggingwidget.h
 	$(MOC) $? -o $@
 
 moc_glview.cpp: glview.h
+	$(MOC) $? -o $@
+
+moc_scenetreewidget.cpp: scenetreewidget.h
 	$(MOC) $? -o $@
 

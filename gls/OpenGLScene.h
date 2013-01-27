@@ -12,6 +12,17 @@ class OpenGLScene
     typedef std::list<std::shared_ptr<IndexedVertexBuffer>> DrawableList;
     DrawableList m_drawables;
 
+    // backbuffer
+    int m_w;
+    int m_h;
+
+    // mouse
+    bool m_mouseLeft;
+    bool m_mouseMiddle;
+    bool m_mouseRight;
+    int m_mouseX;
+    int m_mouseY;
+
 public:
     OpenGLScene();
     ~OpenGLScene();
