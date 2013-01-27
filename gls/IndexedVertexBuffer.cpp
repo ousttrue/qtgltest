@@ -43,30 +43,6 @@ public:
             m_pos+=sizeof(T);
             return t;
         }
-
-    float getFloat()
-    {
-        return get<float>();
-    }
-
-    unsigned long getUInt(unsigned int size)
-    {
-        switch(size)
-        {
-            case 1:
-                return get<unsigned char>();
-
-            case 2:
-                return get<unsigned short>();
-
-            case 4:
-                return get<unsigned long>();
-
-            default:
-                assert(false);
-                return 0;
-        }
-    }
 };
 
 
@@ -179,7 +155,7 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPMD(
         return std::shared_ptr<IndexedVertexBuffer>();
     }
 
-    float version=reader.getFloat();
+    float version=reader.get<float>();
     if(version!=1.0f){
         return std::shared_ptr<IndexedVertexBuffer>();
     }
@@ -187,16 +163,16 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPMD(
     std::string name=reader.getString(20);
     std::string comment=reader.getString(256);
 
-    unsigned long vertexCount=reader.getUInt(4);
+    unsigned long vertexCount=reader.get<unsigned long>();
     for(unsigned long i=0; i<vertexCount; ++i){
-        float x=reader.getFloat();
-        float y=reader.getFloat();
-        float z=reader.getFloat();
-        float nx=reader.getFloat();
-        float ny=reader.getFloat();
-        float nz=reader.getFloat();
-        float u=reader.getFloat();
-        float v=reader.getFloat();
+        float x=reader.get<float>();
+        float y=reader.get<float>();
+        float z=reader.get<float>();
+        float nx=reader.get<float>();
+        float ny=reader.get<float>();
+        float nz=reader.get<float>();
+        float u=reader.get<float>();
+        float v=reader.get<float>();
         unsigned short b0=reader.get<unsigned short>();
         unsigned short b1=reader.get<unsigned short>();
         unsigned char w0=reader.get<unsigned char>();
@@ -208,9 +184,9 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPMD(
 			0, 0, 0));
     }
 
-    unsigned long indexCount=reader.getUInt(4);
+    unsigned long indexCount=reader.get<unsigned long>();
     for(unsigned long i=0; i<indexCount; ++i){
-        unsigned short index=reader.getUInt(2);
+        unsigned short index=reader.get<unsigned short>();
         buffer->pushIndex(index);
     }
 
