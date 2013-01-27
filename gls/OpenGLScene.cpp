@@ -12,6 +12,7 @@ OpenGLScene::OpenGLScene()
     : m_camera(new Camera)
 {
     m_drawables.push_back(IndexedVertexBuffer::CreateTriangle());
+    //m_drawables.push_back(IndexedVertexBuffer::CreateCube(0.5f));
 }
 
 OpenGLScene::~OpenGLScene()
