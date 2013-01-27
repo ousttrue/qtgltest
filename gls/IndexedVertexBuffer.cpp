@@ -208,6 +208,12 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPMD(
 			0, 0, 0));
     }
 
+    unsigned long indexCount=reader.getUInt(4);
+    for(unsigned long i=0; i<indexCount; ++i){
+        unsigned short index=reader.getUInt(2);
+        buffer->pushIndex(index);
+    }
+
     return buffer;
 }
 

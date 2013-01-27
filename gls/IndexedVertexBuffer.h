@@ -40,6 +40,10 @@ public:
     ~IndexedVertexBuffer();
 
     void pushVertex(const Vertex &v){ m_vertices.push_back(v); }
+    void pushIndex(unsigned int index)
+    {
+        m_indices.push_back(index);
+    }
     void addTriangle(unsigned int i0, unsigned int i1, unsigned int i2)
     {
         m_indices.push_back(i0);
