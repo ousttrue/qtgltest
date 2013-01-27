@@ -58,6 +58,32 @@ bool Shader::loadFile(GLenum shader_type, const char *path)
 
     GLint result;
     glGetShaderiv(m_handle, GL_COMPILE_STATUS, &result);
-    return result!=GL_FALSE;
+    if(result==GL_FALSE){
+        
+        GLint logLen;
+        glGetShaderiv(m_handle, GL_INFO_LOG_LENGTH, &logLen);
+        if(logLen>0){
+            std::vector<char> log(logLen);
+            GLsizei written;
+            glGetShaderInfoLog(m_handle, logLen, &written, &log[0]);
+            enqueueLogMessage(std::string(log.begin(), log.end()));
+        }
+
+        return false;
+    }
+
+    return true;
+}
+
+std::string Shader::dequeueLogMessage()
+{
+    std::string log=m_logQueue.front();
+    m_logQueue.pop();
+    return log;
+}
+
+void Shader::enqueueLogMessage(const std::string &log)
+{
+    m_logQueue.push(log);
 }
 

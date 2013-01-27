@@ -55,3 +55,33 @@ bool ShaderProgram::setUniform(const char *key, const glm::mat4 &m)
     return true;
 }
 
+bool ShaderProgram::setUniform(const char *key, const glm::mat3 &m)
+{
+    GLuint location=glGetUniformLocation(m_handle, key);
+    if(location<0){
+        return false;
+    }
+    glUniformMatrix3fv(location, 1, GL_FALSE, &m[0][0]);
+    return true;
+}
+
+bool ShaderProgram::setUniform(const char *key, const glm::vec3 &v)
+{
+    GLuint location=glGetUniformLocation(m_handle, key);
+    if(location<0){
+        return false;
+    }
+    glUniform3f(location, v[0], v[1], v[2]);
+    return true;
+}
+
+bool ShaderProgram::setUniform(const char *key, const glm::vec4 &v)
+{
+    GLuint location=glGetUniformLocation(m_handle, key);
+    if(location<0){
+        return false;
+    }
+    glUniform4f(location, v[0], v[1], v[2], v[3]);
+    return true;
+}
+

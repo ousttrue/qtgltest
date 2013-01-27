@@ -18,5 +18,8 @@ public:
     bool link(std::shared_ptr<Shader> vert, std::shared_ptr<Shader> frag);
     bool setUniform(const char *key, const glm::dmat4 &m);
     bool setUniform(const char *key, const glm::mat4 &m);
+    bool setUniform(const char *key, const glm::mat3 &m);
+    bool setUniform(const char *key, const glm::vec3 &v);
+    bool setUniform(const char *key, const glm::vec4 &v);
 };
 
