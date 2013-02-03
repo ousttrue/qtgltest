@@ -31,6 +31,7 @@ if os.is("windows") then
     QTDIR="C:/Qt/4.8.4"
 else
     MAKE="make"
+    QTDIR=""
 end
 
 configuration "windows"

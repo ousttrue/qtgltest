@@ -99,7 +99,7 @@ void MainWindow::onOpen()
         model=IndexedVertexBuffer::CreateFromPLY(path.toUtf8().data(),
                 &buffer[0], buffer.size());
     }
-    if(ext=="pmd"){
+    else if(ext=="pmd"){
         model=IndexedVertexBuffer::CreateFromPMD(path.toUtf8().data(),
                 &buffer[0], buffer.size());
 	}
