@@ -6,9 +6,8 @@
 
 
 GLView::GLView(std::shared_ptr<OpenGLScene> scene, QWidget *parent)
-: QGLWidget(parent), m_scene(scene), m_elapsed(0)
+: QGLWidget(parent), m_elapsed(0), m_gl(new OpenGLRenderer), m_scene(scene)
 {
-    m_gl=std::make_shared<OpenGLRenderer>();
 }
 
 GLView::~GLView()
@@ -53,47 +52,41 @@ void GLView::mouseMoveEvent(QMouseEvent *event)
 
 void GLView::mousePressEvent(QMouseEvent *event)
 {
-    switch(event->button()){
-        case Qt::LeftButton:
-            if(m_scene->onMouseLeftDown(event->x(), event->y())){
-                repaint();
-            }
-            break;
-
-        case Qt::MidButton:
-            if(m_scene->onMouseMiddleDown(event->x(), event->y())){
-                repaint();
-            }
-            break;
-
-        case Qt::RightButton:
-            if(m_scene->onMouseRightDown(event->x(), event->y())){
-                repaint();
-            }
-            break;
+    auto b=event->button();
+    if(b==Qt::LeftButton){
+        if(m_scene->onMouseLeftDown(event->x(), event->y())){
+            repaint();
+        }
+    }
+    else if(b==Qt::MidButton){
+        if(m_scene->onMouseMiddleDown(event->x(), event->y())){
+            repaint();
+        }
+    }
+    else if(b==Qt::RightButton){
+        if(m_scene->onMouseRightDown(event->x(), event->y())){
+            repaint();
+        }
     }
 }
 
 void GLView::mouseReleaseEvent(QMouseEvent *event)
 {
-    switch(event->button()){
-        case Qt::LeftButton:
-            if(m_scene->onMouseLeftUp(event->x(), event->y())){
-                repaint();
-            }
-            break;
-
-        case Qt::MidButton:
-            if(m_scene->onMouseMiddleUp(event->x(), event->y())){
-                repaint();
-            }
-            break;
-
-        case Qt::RightButton:
-            if(m_scene->onMouseRightUp(event->x(), event->y())){
-                repaint();
-            }
-            break;
+    auto b=event->button();
+    if(b==Qt::LeftButton){
+        if(m_scene->onMouseLeftUp(event->x(), event->y())){
+            repaint();
+        }
+    }
+    else if(Qt::MidButton){
+        if(m_scene->onMouseMiddleUp(event->x(), event->y())){
+            repaint();
+        }
+    }
+    else if(Qt::RightButton){
+        if(m_scene->onMouseRightUp(event->x(), event->y())){
+            repaint();
+        }
     }
 }
 

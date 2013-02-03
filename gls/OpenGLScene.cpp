@@ -6,9 +6,9 @@
 
 OpenGLScene::OpenGLScene()
     : m_camera(new Camera),
+    m_w(1), m_h(1),
     m_mouseLeft(false), m_mouseMiddle(false), m_mouseRight(false),
-    m_mouseX(0), m_mouseY(0),
-    m_w(1), m_h(1)
+    m_mouseX(0), m_mouseY(0)
 {
     m_drawables.push_back(IndexedVertexBuffer::CreateTriangle());
     //m_drawables.push_back(IndexedVertexBuffer::CreateCube(0.5f));
