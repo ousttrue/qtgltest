@@ -11,6 +11,7 @@ std::shared_ptr<SceneNode> SceneNode::addChild(const std::string &name,
     auto child=std::make_shared<SceneNode>(name);
     child->m_parent=shared_from_this();
     child->m_buffer=buffer;
+    m_children.push_back(child);
     return child;
 }
 
