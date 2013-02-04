@@ -20,9 +20,3 @@ void OpenGLScene::update(int ms)
 {
 }
 
-void OpenGLScene::clear()
-{
-    m_root->clear();
-}
-
-

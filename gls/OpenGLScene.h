@@ -18,8 +18,6 @@ public:
     void update(int ms);
     std::shared_ptr<Camera> getCamera(){ return m_camera; }
     std::shared_ptr<SceneNode> getRootNode(){ return m_root; }
-
-    void clear();
     void addBuffer(std::shared_ptr<IndexedVertexBuffer> buffer);
 };
 

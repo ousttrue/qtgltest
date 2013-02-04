@@ -16,21 +16,7 @@ SceneModel::SceneModel(QObject *parent)
 {
 }
 
-QModelIndex SceneModel::index(int, int, const QModelIndex&) const
-{
-    return QModelIndex();
-}
-
-QModelIndex SceneModel::parent(const QModelIndex&) const
-{
-    return QModelIndex();
-}
-
-int SceneModel::rowCount(const QModelIndex&) const
-{
-    return 0;
-}
-
+// columns
 int SceneModel::columnCount(const QModelIndex&) const
 {
     return 1;
@@ -45,9 +31,77 @@ QVariant SceneModel::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-QVariant SceneModel::data(const QModelIndex&, int) const
+// rows
+int SceneModel::rowCount(const QModelIndex &parent) const
 {
+    if(parent.isValid() && parent.column()!=0){
+        return 0;
+    }
+    auto parentItem=itemForIndex(parent);
+    return parentItem ? parentItem->childCount() : 0;
+}
+
+QVariant SceneModel::data(const QModelIndex &index, int role) const
+{
+    if(!index.isValid() || index.column()<0 || index.column()>0){
+        return QVariant();
+    }
+    if(auto item=itemForIndex(index)){
+        if(role==Qt::DisplayRole||role==Qt::EditRole){
+            return item->name().c_str();
+        }
+    }
     return QVariant();
+}
+
+QModelIndex SceneModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if(row<0 || column <0 ||column>0
+            || (parent.isValid() && parent.column()!=0)){
+        return QModelIndex();
+    }
+    auto parentItem=itemForIndex(parent);
+    Q_ASSERT(parentItem);
+    if(auto item=parentItem->childAt(row)){
+        return createIndex(row, column, item.get());
+    }
+    return QModelIndex();
+}
+
+QModelIndex SceneModel::parent(const QModelIndex &index) const
+{
+    if(!index.isValid()){
+        return QModelIndex();
+    }
+    if(auto childItem=itemForIndex(index)){
+        if(auto parentItem=childItem->parent()){
+            if(parentItem==m_openglScene->getRootNode()){
+                return QModelIndex();
+            }
+            if(auto grandParentItem=parentItem->parent()){
+                int row=grandParentItem->rowOfChild(parentItem);
+                return createIndex(row, 0, parentItem.get());
+            }
+        }
+    }
+    return QModelIndex();
+}
+
+bool SceneModel::insertRows(int row, int count, const QModelIndex &parent)
+{
+    beginInsertRows(parent, row, row+count-1);
+    endInsertRows();
+    return true;
+}
+
+bool SceneModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    beginInsertRows(parent, row, row+count-1);
+	if(auto item=parent.isValid() ? static_cast<SceneNode*>(parent.internalPointer()) : m_openglScene->getRootNode().get()){
+		item->removeChildren(row, count);
+	}
+    endInsertRows();
+    return true;
 }
 
 void SceneModel::resize(int w, int h)
@@ -100,10 +154,15 @@ void SceneModel::loadFile(const QString &path)
     }
 
     logging(QString("open %1").arg(path));
-    m_openglScene->clear();
-    m_openglScene->getRootNode()->addChild(path.toUtf8().data(), model);
 
-    // ToDo:
+	if(m_openglScene->getRootNode()->childCount()>0){
+		int count=m_openglScene->getRootNode()->childCount();
+		removeRows(0, count, QModelIndex());
+	}
+
+    m_openglScene->getRootNode()->addChild(path.toUtf8().data(), model);
+    insertRow(0, QModelIndex());
+
     updated();
 }
 
@@ -180,5 +239,15 @@ void SceneModel::onMouseWheel(int d)
 {
     m_openglScene->getCamera()->dolly(d);
     updated();
+}
+
+std::shared_ptr<SceneNode> SceneModel::itemForIndex(const QModelIndex &index)const
+{
+    if(index.isValid()){
+        if(auto item=static_cast<SceneNode*>(index.internalPointer())){
+            return item->shared_from_this();
+        }
+    }
+    return m_openglScene->getRootNode();
 }
 

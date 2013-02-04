@@ -4,6 +4,7 @@
 
 
 class OpenGLScene;
+class SceneNode;
 class SceneModel: public QAbstractItemModel
 {
 Q_OBJECT
@@ -23,13 +24,16 @@ Q_OBJECT
 
 public:
     SceneModel(QObject* parent=0);
-    QModelIndex index(int, int, const QModelIndex&) const;
-    QModelIndex parent(const QModelIndex&) const;
-    int rowCount(const QModelIndex&) const;
-    QVariant data(const QModelIndex&, int) const;
-
+    // columns
     int columnCount(const QModelIndex&) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    // rows
+    int rowCount(const QModelIndex&) const;
+    QVariant data(const QModelIndex&, int) const;
+    QModelIndex index(int, int, const QModelIndex&) const;
+    QModelIndex parent(const QModelIndex&) const;
+    bool insertRows(int row, int count, const QModelIndex &parent);
+    bool removeRows(int row, int count, const QModelIndex &parent);
 
     void resize(int w, int h);
 
@@ -49,5 +53,8 @@ public:
 signals:
     void logging(const QString &message);
     void updated();
+
+private:
+    std::shared_ptr<SceneNode> itemForIndex(const QModelIndex &index)const;
 };
 

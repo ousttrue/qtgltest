@@ -15,3 +15,19 @@ std::shared_ptr<SceneNode> SceneNode::addChild(const std::string &name,
     return child;
 }
 
+size_t SceneNode::rowOfChild(std::shared_ptr<SceneNode> child)
+{
+    for(size_t i=0; i<m_children.size(); ++i){
+        if(m_children[i]==child){
+            return i;
+        }
+    }
+    return -1;
+}
+
+void SceneNode::removeChildren(size_t index, size_t count)
+{
+    auto start=m_children.begin();
+    m_children.erase(start, start+count);
+}
+
