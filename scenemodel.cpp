@@ -2,12 +2,17 @@
 #include "OpenGLScene.h"
 #include "IndexedVertexBuffer.h"
 #include "SceneNode.h"
+#include "Camera.h"
+#include <QFile>
 #include <QFileInfo>
 #include <QDataStream>
 
 
 SceneModel::SceneModel(QObject *parent)
     : QAbstractItemModel(parent), m_openglScene(new OpenGLScene)
+    , m_mouseLeft(false), m_mouseMiddle(false), m_mouseRight(false),
+    m_mouseX(0), m_mouseY(0),
+    m_w(1), m_h(1)
 {
 }
 
@@ -47,20 +52,27 @@ QVariant SceneModel::data(const QModelIndex&, int) const
 
 void SceneModel::resize(int w, int h)
 {
-    m_openglScene->resize(w, h);
-    repaint();
+    m_w=w;
+    m_h=h;
+    m_openglScene->getCamera()->resize(w, h);
+    updated();
 }
 
 void SceneModel::loadFile(const QString &path)
 {
-    QFileInfo file(path);
+    QFile file(path);
     std::vector<char> buffer(file.size());
     if(buffer.empty()){
         logging("empty file");
         return;
     }
 
-    QDataStream in(path.toLocal8Bit());
+	if (!file.open(QIODevice::ReadOnly)){
+		logging("fail to open");
+		return;
+	}
+
+    QDataStream in(&file);
     if(in.readRawData(&buffer[0], buffer.size())==-1){
         logging("fail to read file");
         return;
@@ -92,6 +104,81 @@ void SceneModel::loadFile(const QString &path)
     m_openglScene->getRootNode()->addChild(path.toUtf8().data(), model);
 
     // ToDo:
-    repaint();
+    updated();
+}
+
+void SceneModel::onMouseLeftDown(int x, int y)
+{
+    m_mouseX=x;
+    m_mouseY=y;
+    m_mouseLeft=true;
+}
+
+void SceneModel::onMouseMiddleDown(int x, int y)
+{
+    m_mouseX=x;
+    m_mouseY=y;
+    m_mouseMiddle=true;
+}
+
+void SceneModel::onMouseRightDown(int x, int y)
+{
+    m_mouseX=x;
+    m_mouseY=y;
+    m_mouseRight=true;
+}
+
+void SceneModel::onMouseLeftUp(int x, int y)
+{
+    m_mouseX=x;
+    m_mouseY=y;
+    m_mouseLeft=false;
+}
+
+void SceneModel::onMouseMiddleUp(int x, int y)
+{
+    m_mouseX=x;
+    m_mouseY=y;
+    m_mouseMiddle=false;
+}
+
+void SceneModel::onMouseRightUp(int x, int y)
+{
+    m_mouseX=x;
+    m_mouseY=y;
+    m_mouseRight=false;
+}
+
+void SceneModel::onMouseMove(int x, int y)
+{
+    bool repaint=false;
+    int dx=x-m_mouseX;
+    int dy=y-m_mouseY;
+    m_mouseX=x;
+    m_mouseY=y;
+    if(m_mouseLeft){
+    }
+    if(m_mouseMiddle){
+        float min=m_w<m_h ? m_w : m_h;
+        float ratio=1.0f/min;
+        m_openglScene->getCamera()->shift(dx*ratio, -dy*ratio);
+        repaint=true;
+    }
+    if(m_mouseRight){
+        float min=m_w<m_h ? m_w : m_h;
+        float ratio=14000.0f/min;
+        m_openglScene->getCamera()->head(dx*ratio);
+        m_openglScene->getCamera()->pitch(dy*ratio);
+        repaint=true;
+    }
+    if(repaint){
+        updated();
+    }
+}
+
+void SceneModel::onMouseWheel(int d)
+{
+    m_openglScene->getCamera()->dolly(d);
+    updated();
 }
 

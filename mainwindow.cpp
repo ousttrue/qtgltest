@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_logging=new LoggingWidget;
     QObject::connect(this, SIGNAL(logging(const QString &)), 
             m_logging, SLOT(receive(const QString &))); 
+    QObject::connect(m_scene, SIGNAL(logging(const QString &)), 
+            m_logging, SLOT(receive(const QString &))); 
 
     setupDock(m_logging,
             tr("Log"),
