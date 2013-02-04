@@ -9,6 +9,8 @@ class OpenGLScene;
 class Drawable;
 class IndexedVertexBuffer;
 class ShaderProgram;
+class Camera;
+class SceneNode;
 class OpenGLRenderer
 {
     std::shared_ptr<ShaderProgram> m_program;
@@ -31,5 +33,6 @@ private:
     std::shared_ptr<Drawable> getDrawable(
     std::shared_ptr<IndexedVertexBuffer> indexedVertexBuffer);
     void enqueueLogMessage(const std::string &log);
+    void renderNode(std::shared_ptr<Camera> camera, std::shared_ptr<SceneNode> node);
 };
 

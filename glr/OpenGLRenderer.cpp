@@ -11,6 +11,7 @@
 #include "VAO.h"
 #include "IndexedVertexBuffer.h"
 #include "Shader.h"
+#include "SceneNode.h"
 #include <algorithm>
 
 
@@ -75,47 +76,55 @@ void OpenGLRenderer::render(std::shared_ptr<OpenGLScene> scene)
     glDrawBuffer(GL_BACK);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
-    auto camera=scene->getCamera();
+    renderNode(scene->getCamera(), scene->getRootNode());
 
-    for(auto it=scene->begin(); it!=scene->end(); ++it){
+    glFlush();
+}
 
-        auto drawable=getDrawable(*it);
+void OpenGLRenderer::renderNode(std::shared_ptr<Camera> camera, 
+        std::shared_ptr<SceneNode> node)
+{
+    auto buffer=node->getBuffer();
+    if(buffer){
+        auto drawable=getDrawable(buffer);
+        auto program=drawable->getProgram();
+        if(program){
 
-        auto program=m_program;
-        if(!program){
-            return;
+            // shader
+            glUseProgram(program->getHandle());
+            // view
+            glm::mat4 projection=glm::make_mat4(camera->getProjectionMatrix());
+            program->setUniform("ProjectionMatrix", projection);
+
+            glm::mat4 mv=glm::make_mat4(camera->getViewMatrix());
+            program->setUniform("ModelViewMatrix", mv);
+            program->setUniform("NormalMatrix", glm::mat3(mv));
+
+            program->setUniform("Kd", glm::vec3(0.8f, 0.8f, 0.8f));
+            program->setUniform("Ld", glm::vec3(1.0f, 1.0f, 1.0f));
+            program->setUniform("LightPosition", glm::vec4(10.0f, 10.0f, 10.0f, 1.0f));
+
+            program->setUniform("MVP",  projection * mv);
+
+            // set vertex buffer
+            glBindVertexArray(drawable->getVAO()->getHandle());
+            // set index buffer
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable->getVAO()->getIndexHandle());
+
+            // draw each submesh
+            unsigned int offset=0;
+            int submeshCount=buffer->getSubMeshCount();
+            for(int i=0; i<submeshCount; ++i){
+                unsigned int indexCount=buffer->getIndexCount(i);
+                glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 
+                        (const GLvoid*)offset);
+                offset+=indexCount;
+            }
         }
+    }
 
-        // shader
-        glUseProgram(program->getHandle());
-        // view
-        glm::mat4 projection=glm::make_mat4(camera->getProjectionMatrix());
-        program->setUniform("ProjectionMatrix", projection);
-
-        glm::mat4 mv=glm::make_mat4(camera->getViewMatrix());
-        program->setUniform("ModelViewMatrix", mv);
-        program->setUniform("NormalMatrix", glm::mat3(mv));
-
-        program->setUniform("Kd", glm::vec3(0.8f, 0.8f, 0.8f));
-        program->setUniform("Ld", glm::vec3(1.0f, 1.0f, 1.0f));
-        program->setUniform("LightPosition", glm::vec4(10.0f, 10.0f, 10.0f, 1.0f));
-
-        program->setUniform("MVP",  projection * mv);
-
-        // set vertex buffer
-        glBindVertexArray(drawable->getVAO()->getHandle());
-        // set index buffer
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable->getVAO()->getIndexHandle());
-
-        // draw each submesh
-        unsigned int offset=0;
-        int submeshCount=(*it)->getSubMeshCount();
-        for(int i=0; i<submeshCount; ++i){
-            unsigned int indexCount=(*it)->getIndexCount(i);
-            glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 
-                    (const GLvoid*)offset);
-            offset+=indexCount;
-        }
+    for(auto it=node->begin(); it!=node->end(); ++it){
+        renderNode(camera, *it);
     }
 }
 

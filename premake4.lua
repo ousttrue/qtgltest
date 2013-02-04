@@ -73,6 +73,7 @@ files {
     "moc_loggingwidget.cpp",
     "moc_glview.cpp",
     "moc_scenetreewidget.cpp",
+    "moc_scenemodel.cpp",
 }
 
 -- compile

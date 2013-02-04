@@ -2,15 +2,16 @@
 #include <GL/glew.h>
 #include "Camera.h"
 #include "IndexedVertexBuffer.h"
+#include "SceneNode.h"
 
 
 OpenGLScene::OpenGLScene()
-    : m_camera(new Camera),
+    : m_camera(new Camera), m_root(new SceneNode("__root__")),
     m_w(1), m_h(1),
     m_mouseLeft(false), m_mouseMiddle(false), m_mouseRight(false),
     m_mouseX(0), m_mouseY(0)
 {
-    m_drawables.push_back(IndexedVertexBuffer::CreateTriangle());
+    m_root->addChild("triangle", IndexedVertexBuffer::CreateTriangle());
     //m_drawables.push_back(IndexedVertexBuffer::CreateCube(0.5f));
 }
 
@@ -29,9 +30,9 @@ void OpenGLScene::resize(int w, int h)
     m_camera->resize(w, h);
 }
 
-void OpenGLScene::addBuffer(std::shared_ptr<IndexedVertexBuffer> buffer)
+void OpenGLScene::clear()
 {
-    m_drawables.push_back(buffer);
+    m_root->clear();
 }
 
 bool OpenGLScene::onMouseLeftDown(int x, int y)

@@ -1,8 +1,10 @@
 #include "scenetreewidget.h"
+#include "scenemodel.h"
 
 
-SceneTreeWidget::SceneTreeWidget(QWidget *parent)
-    : QTreeView(parent)
+SceneTreeWidget::SceneTreeWidget(SceneModel *scene, QWidget *parent)
+    : QTreeView(parent), m_scene(scene)
 {
+    setModel(m_scene);    
 }
 

@@ -3,12 +3,11 @@
 #include "loggingwidget.h"
 #include "scenetreewidget.h"
 #include "glview.h"
-#include "OpenGLScene.h"
-#include "IndexedVertexBuffer.h"
+#include "scenemodel.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
-: QMainWindow(parent), m_scene(new OpenGLScene)
+: QMainWindow(parent), m_scene(new SceneModel)
 {
     m_logging=new LoggingWidget;
     QObject::connect(this, SIGNAL(logging(const QString &)), 
@@ -20,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
             Qt::BottomDockWidgetArea
             );
 
-    setupDock(new SceneTreeWidget,
+    setupDock(new SceneTreeWidget(m_scene),
             tr("Scene"), 
             Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea,
             Qt::LeftDockWidgetArea
@@ -30,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(glv);
     QObject::connect(glv, SIGNAL(logging(const QString &)), 
             m_logging, SLOT(receive(const QString &))); 
+    QObject::connect(m_scene, SIGNAL(repaint()),
+            glv, SLOT(update()));
 
     // file menu
     auto file=menuBar()->addMenu(tr("&File"));
@@ -80,41 +81,6 @@ void MainWindow::onOpen()
         return;
     }
 
-    std::vector<char> buffer(file.size());
-    if(buffer.empty()){
-        logging("empty file");
-        return;
-    }
-
-    QDataStream in(&file);
-    if(in.readRawData(&buffer[0], buffer.size())==-1){
-        logging("fail to read file");
-        return;
-    }
-
-    QFileInfo info(path);
-    QString ext=info.suffix().toLower();
-    std::shared_ptr<IndexedVertexBuffer> model;
-    if(ext=="ply"){
-        model=IndexedVertexBuffer::CreateFromPLY(path.toUtf8().data(),
-                &buffer[0], buffer.size());
-    }
-    else if(ext=="pmd"){
-        model=IndexedVertexBuffer::CreateFromPMD(path.toUtf8().data(),
-                &buffer[0], buffer.size());
-	}
-    else{
-        logging(QString("unknown extension: %1").arg(ext));
-        return;
-    }
-
-    if(!model){
-        logging("fail to read model");
-        return;
-    }
-
-    logging(QString("open %1").arg(path));
-    m_scene->clear();
-    m_scene->addBuffer(model);
+    m_scene->loadFile(path);
 }
 

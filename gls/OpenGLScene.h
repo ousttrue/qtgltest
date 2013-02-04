@@ -5,12 +5,12 @@
 
 class Camera;
 class IndexedVertexBuffer;
+class SceneNode;
 class OpenGLScene
 {
     std::shared_ptr<Camera> m_camera;
 
-    typedef std::list<std::shared_ptr<IndexedVertexBuffer>> DrawableList;
-    DrawableList m_drawables;
+    std::shared_ptr<SceneNode> m_root;
 
     // backbuffer
     int m_w;
@@ -29,10 +29,9 @@ public:
     void update(int ms);
     void resize(int w, int h);
     std::shared_ptr<Camera> getCamera(){ return m_camera; }
-    DrawableList::iterator begin(){ return m_drawables.begin(); }
-    DrawableList::iterator end(){ return m_drawables.end(); }
+    std::shared_ptr<SceneNode> getRootNode(){ return m_root; }
 
-    void clear(){ m_drawables.clear(); }
+    void clear();
     void addBuffer(std::shared_ptr<IndexedVertexBuffer> buffer);
 
     // mouse event

@@ -1,11 +1,12 @@
 #include "glview.h"
 #include "OpenGLRenderer.h"
+#include "scenemodel.h"
 #include "OpenGLScene.h"
 #include <QTimer>
 #include <QMouseEvent>
 
 
-GLView::GLView(std::shared_ptr<OpenGLScene> scene, QWidget *parent)
+GLView::GLView(SceneModel *scene, QWidget *parent)
 : QGLWidget(parent), m_elapsed(0), m_gl(new OpenGLRenderer), m_scene(scene)
 {
 }
@@ -40,9 +41,10 @@ void GLView::resizeGL(int width, int height)
 
 void GLView::paintGL()
 {
-    m_gl->render(m_scene);
+    m_gl->render(m_scene->getOpenGLScene());
 }
 
+/*
 void GLView::mouseMoveEvent(QMouseEvent *event)
 {
     if(m_scene->onMouseMove(event->x(), event->y())){
@@ -96,4 +98,5 @@ void GLView::wheelEvent(QWheelEvent *event)
         repaint();
     }
 }
+*/
 

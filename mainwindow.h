@@ -3,13 +3,13 @@
 
 
 class LoggingWidget;
-class OpenGLScene;
+class SceneModel;
 class MainWindow: public QMainWindow
 {
 Q_OBJECT
 
     LoggingWidget *m_logging;
-    std::shared_ptr<OpenGLScene> m_scene;
+    SceneModel *m_scene;
 
 public:
     MainWindow(QWidget *parent=0);
