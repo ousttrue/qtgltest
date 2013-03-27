@@ -6,10 +6,19 @@
 
 
 OpenGLScene::OpenGLScene()
-    : m_camera(new Camera), m_root(new SceneNode("__root__"))
+    : m_root(new SceneNode("__root__"))
 {
-    m_root->addChild("triangle", IndexedVertexBuffer::CreateTriangle());
-    //m_drawables.push_back(IndexedVertexBuffer::CreateCube(0.5f));
+    auto cameraNode=std::make_shared<SceneNode>("camera");
+    m_root->addChild(cameraNode);
+    m_camera=std::make_shared<Camera>(cameraNode);
+
+    auto lightNode=std::make_shared<SceneNode>("light");
+    m_root->addChild(lightNode);
+
+    auto meshNode=std::make_shared<SceneNode>("triangle");
+    auto mesh=IndexedVertexBuffer::CreateTriangle();
+    meshNode->setMesh(mesh);
+    m_root->addChild(meshNode);
 }
 
 OpenGLScene::~OpenGLScene()

@@ -1,6 +1,8 @@
 #pragma once
+#include <memory>
 
 
+class SceneNode;
 class Camera
 {
     // projection
@@ -18,8 +20,10 @@ class Camera
     float m_shiftY;
     float m_view[16];
 
+    std::shared_ptr<SceneNode> m_node;
+
 public:
-    Camera();
+    Camera(std::shared_ptr<SceneNode> node);
     ~Camera();
     // projection
     float *getProjectionMatrix(){ return m_projection; }

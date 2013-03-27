@@ -5,15 +5,22 @@ SceneNode::SceneNode(const std::string &name)
 {
 }
 
+std::shared_ptr<SceneNode> SceneNode::addChild(const std::shared_ptr<SceneNode> &child)
+{
+    child->m_parent=shared_from_this();
+    m_children.push_back(child);
+    return child;
+}
+
+/*
 std::shared_ptr<SceneNode> SceneNode::addChild(const std::string &name, 
         std::shared_ptr<IndexedVertexBuffer> buffer)
 {
     auto child=std::make_shared<SceneNode>(name);
-    child->m_parent=shared_from_this();
     child->m_buffer=buffer;
-    m_children.push_back(child);
-    return child;
+    return addChild(child);
 }
+*/
 
 size_t SceneNode::rowOfChild(std::shared_ptr<SceneNode> child)
 {

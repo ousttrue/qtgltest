@@ -84,7 +84,7 @@ void OpenGLRenderer::render(std::shared_ptr<OpenGLScene> scene)
 void OpenGLRenderer::renderNode(std::shared_ptr<Camera> camera, 
         std::shared_ptr<SceneNode> node)
 {
-    auto buffer=node->getBuffer();
+    auto buffer=node->getMesh();
     if(buffer){
         auto drawable=getDrawable(buffer);
         auto program=drawable->getProgram();

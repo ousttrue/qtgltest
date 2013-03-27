@@ -160,7 +160,9 @@ void SceneModel::loadFile(const QString &path)
 		removeRows(0, count, QModelIndex());
 	}
 
-    m_openglScene->getRootNode()->addChild(path.toUtf8().data(), model);
+    auto modelNode=std::make_shared<SceneNode>(path.toUtf8().data());
+    modelNode->setMesh(model);
+    m_openglScene->getRootNode()->addChild(modelNode);
     insertRow(0, QModelIndex());
 
     updated();
