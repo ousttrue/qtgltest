@@ -4,10 +4,12 @@
 #include "scenetreewidget.h"
 #include "glview.h"
 #include "scenemodel.h"
+#include "scenenodewidget.h"
+#include "gls/SceneNode.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
-: QMainWindow(parent), m_scene(new SceneModel)
+: QMainWindow(parent), m_logging(0), m_scene(new SceneModel), m_sceneTreeView(0)
 {
     m_logging=new LoggingWidget;
     QObject::connect(this, SIGNAL(logging(const QString &)), 
@@ -21,11 +23,15 @@ MainWindow::MainWindow(QWidget *parent)
             Qt::BottomDockWidgetArea
             );
 
-    setupDock(new SceneTreeWidget(m_scene),
+    auto m_sceneTreeView=new SceneTreeWidget(m_scene);
+    setupDock(m_sceneTreeView,
             tr("Scene"), 
             Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea,
             Qt::LeftDockWidgetArea
             );
+
+    QObject::connect(m_sceneTreeView, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SLOT(onSceneItemActivated(const QModelIndex &)));
 
     auto glv=new GLView(m_scene);
     setCentralWidget(glv);
@@ -84,5 +90,20 @@ void MainWindow::onOpen()
     }
 
     m_scene->loadFile(path);
+}
+
+void MainWindow::onSceneItemActivated(const QModelIndex &index)
+{
+    auto node=m_scene->itemForIndex(index);
+    if(!node){
+        logging("no such node");
+        return;
+    }
+
+    auto w=new SceneNodeWidget(node);
+    setupDock(w, node->name().c_str(),
+            Qt::RightDockWidgetArea | Qt::RightDockWidgetArea,
+            Qt::RightDockWidgetArea
+            );
 }
 

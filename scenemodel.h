@@ -28,10 +28,10 @@ public:
     int columnCount(const QModelIndex&) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     // rows
-    int rowCount(const QModelIndex&) const;
-    QVariant data(const QModelIndex&, int) const;
-    QModelIndex index(int, int, const QModelIndex&) const;
-    QModelIndex parent(const QModelIndex&) const;
+    int rowCount(const QModelIndex &index) const;
+    QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
+    QModelIndex index(int, int, const QModelIndex &index) const;
+    QModelIndex parent(const QModelIndex &index) const;
     bool insertRows(int row, int count, const QModelIndex &parent);
     bool removeRows(int row, int count, const QModelIndex &parent);
 
@@ -50,11 +50,11 @@ public:
     void onMouseMove(int x, int y);
     void onMouseWheel(int d);
 
+    std::shared_ptr<SceneNode> itemForIndex(const QModelIndex &index)const;
+
 signals:
     void logging(const QString &message);
     void updated();
 
-private:
-    std::shared_ptr<SceneNode> itemForIndex(const QModelIndex &index)const;
 };
 
