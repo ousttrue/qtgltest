@@ -124,8 +124,8 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPMD(
     std::string name=reader.getString(20);
     std::string comment=reader.getString(256);
 
-    unsigned long vertexCount=reader.get<unsigned long>();
-    for(unsigned long i=0; i<vertexCount; ++i){
+    unsigned int vertexCount=reader.get<unsigned int>();
+    for(unsigned int i=0; i<vertexCount; ++i){
         float x=reader.get<float>();
         float y=reader.get<float>();
         float z=reader.get<float>();
@@ -145,8 +145,8 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPMD(
 			0, 0, 0));
     }
 
-    unsigned long indexCount=reader.get<unsigned long>();
-    for(unsigned long i=0; i<indexCount; ++i){
+    unsigned int indexCount=reader.get<unsigned int>();
+    for(unsigned int i=0; i<indexCount; ++i){
         unsigned short index=reader.get<unsigned short>();
         buffer->pushIndex(index);
     }
