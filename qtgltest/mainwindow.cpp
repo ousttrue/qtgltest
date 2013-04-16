@@ -8,7 +8,7 @@
 #include "glview.h"
 #include "scenemodel.h"
 #include "scenenodewidget.h"
-#include "gls/SceneNode.h"
+#include "SceneNode.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
