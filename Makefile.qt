@@ -19,3 +19,6 @@ moc_scenetreewidget.cpp: scenetreewidget.h
 moc_scenemodel.cpp: scenemodel.h
 	$(MOC) $? -o $@
 
+
+clean:
+	rm -rf $(MOC_FILES)

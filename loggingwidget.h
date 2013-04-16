@@ -1,5 +1,5 @@
 #pragma once
-#include <QtGui>
+#include <QListWidget>
 
 
 class LoggingWidget :public QListWidget

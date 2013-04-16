@@ -28,7 +28,7 @@ end
 
 if os.is("windows") then
     MAKE="nmake /nologo"
-    QTDIR="C:/Qt/4.8.4"
+    QTDIR="C:/Qt/Qt5.0.2/5.0.2/msvc2010_opengl"
 else
     MAKE="make"
     QTDIR=""
@@ -100,6 +100,7 @@ do
         QTDIR.."/include",
         QTDIR.."/include/QtCore",
         QTDIR.."/include/QtGui",
+        QTDIR.."/include/QtWidgets",
         QTDIR.."/include/QtOpenGL",
     }
     libdirs {
@@ -114,14 +115,19 @@ end
 configuration { "windows", "debug" }
 do
     links {
-        "QtCored4",
-        "QtGuid4",
-        "QtOpenGLd4",
+        "Qt5Cored",
+        "Qt5Guid",
+        "Qt5Widgetsd",
+        "Qt5OpenGLd",
     }
 end
 configuration { "windows", "release" }
 do
     links {
+        "Qt5Core",
+        "Qt5Gui",
+        "Qt5Widgets",
+        "Qt5OpenGL",
     }
 end
 

@@ -1,4 +1,7 @@
 #include <QtGui>
+#include <qmenubar.h>
+#include <qdockwidget.h>
+#include <qfiledialog.h>
 #include "mainwindow.h"
 #include "loggingwidget.h"
 #include "scenetreewidget.h"
