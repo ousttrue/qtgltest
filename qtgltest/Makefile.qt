@@ -1,8 +1,10 @@
 MOC=moc
-MOC_FILES=moc_mainwindow.cpp moc_loggingwidget.cpp moc_glview.cpp moc_scenetreewidget.cpp moc_scenemodel.cpp
+MOC_FILES=moc_mainwindow.cpp moc_loggingwidget.cpp moc_glview.cpp moc_scenetreewidget.cpp moc_scenemodel.cpp moc_scenenodewidget.cpp
+UIC=uic
+UI_FILES=ui_scenenodewidget.h
 
 
-moc: $(MOC_FILES)
+moc: $(MOC_FILES) $(UI_FILES)
 
 moc_mainwindow.cpp: mainwindow.h
 	$(MOC) $? -o $@
@@ -18,6 +20,13 @@ moc_scenetreewidget.cpp: scenetreewidget.h
 
 moc_scenemodel.cpp: scenemodel.h
 	$(MOC) $? -o $@
+
+moc_scenenodewidget.cpp: scenenodewidget.h
+	$(MOC) $? -o $@
+
+
+ui_scenenodewidget.h: scenenodewidget.ui
+	$(UIC) $? -o $@
 
 
 clean:

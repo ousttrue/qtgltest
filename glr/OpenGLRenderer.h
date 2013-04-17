@@ -33,6 +33,8 @@ private:
     std::shared_ptr<Drawable> getDrawable(
     std::shared_ptr<IndexedVertexBuffer> indexedVertexBuffer);
     void enqueueLogMessage(const std::string &log);
-    void renderNode(std::shared_ptr<Camera> camera, std::shared_ptr<SceneNode> node);
+    void renderNode(std::shared_ptr<SceneNode> cameraNode, 
+            std::shared_ptr<SceneNode> lightNode,
+            std::shared_ptr<SceneNode> node);
 };
 

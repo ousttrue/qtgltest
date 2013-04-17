@@ -8,3 +8,6 @@ ToDo
 * NodeDockにカメラパラメータの操作
 * NodeDockにライトパラメータの操作
 
+OpenGL4.0 Shading Language Cookbook
+-----------------------------------
+Chapter2...

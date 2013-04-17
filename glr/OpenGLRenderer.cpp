@@ -76,14 +76,21 @@ void OpenGLRenderer::render(std::shared_ptr<OpenGLScene> scene)
     glDrawBuffer(GL_BACK);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
-    renderNode(scene->getCamera(), scene->getRootNode());
+    renderNode(scene->getCameraNode(), scene->getLightNode(), scene->getRootNode());
 
     glFlush();
 }
 
-void OpenGLRenderer::renderNode(std::shared_ptr<Camera> camera, 
+void OpenGLRenderer::renderNode(std::shared_ptr<SceneNode> cameraNode, 
+        std::shared_ptr<SceneNode> lightNode,
         std::shared_ptr<SceneNode> node)
 {
+    auto camera=cameraNode->getCamera();
+    if(!camera){
+        return;
+    }
+    auto light=lightNode->getLight();
+
     auto buffer=node->getMesh();
     if(buffer){
         auto drawable=getDrawable(buffer);
@@ -102,7 +109,8 @@ void OpenGLRenderer::renderNode(std::shared_ptr<Camera> camera,
 
             program->setUniform("Kd", glm::vec3(0.8f, 0.8f, 0.8f));
             program->setUniform("Ld", glm::vec3(1.0f, 1.0f, 1.0f));
-            program->setUniform("LightPosition", glm::vec4(10.0f, 10.0f, 10.0f, 1.0f));
+            auto &lightPos=lightNode->position();
+            program->setUniform("LightPosition", glm::vec4(lightPos[0], lightPos[1], lightPos[2], 1.0f));
 
             program->setUniform("MVP",  projection * mv);
 
@@ -124,7 +132,7 @@ void OpenGLRenderer::renderNode(std::shared_ptr<Camera> camera,
     }
 
     for(auto it=node->begin(); it!=node->end(); ++it){
-        renderNode(camera, *it);
+        renderNode(cameraNode, lightNode, *it);
     }
 }
 

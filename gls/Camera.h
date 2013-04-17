@@ -20,7 +20,7 @@ class Camera
     float m_shiftY;
     float m_view[16];
 
-    std::shared_ptr<SceneNode> m_node;
+    std::weak_ptr<SceneNode> m_node;
 
 public:
     Camera(std::shared_ptr<SceneNode> node);

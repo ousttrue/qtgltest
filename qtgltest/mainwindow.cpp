@@ -26,16 +26,17 @@ MainWindow::MainWindow(QWidget *parent)
             Qt::BottomDockWidgetArea
             );
 
+    // tree view
     auto m_sceneTreeView=new SceneTreeWidget(m_scene);
     setupDock(m_sceneTreeView,
             tr("Scene"), 
             Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea,
             Qt::LeftDockWidgetArea
             );
-
     QObject::connect(m_sceneTreeView, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(onSceneItemActivated(const QModelIndex &)));
 
+    // OpenGL view
     auto glv=new GLView(m_scene);
     setCentralWidget(glv);
     QObject::connect(glv, SIGNAL(logging(const QString &)), 
@@ -108,5 +109,8 @@ void MainWindow::onSceneItemActivated(const QModelIndex &index)
             Qt::RightDockWidgetArea | Qt::RightDockWidgetArea,
             Qt::RightDockWidgetArea
             );
+
+    QObject::connect(m_scene, &SceneModel::sceneNodeUpdated,
+            w, &SceneNodeWidget::onUpdate);
 }
 

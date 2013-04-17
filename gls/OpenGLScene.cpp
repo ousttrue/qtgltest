@@ -6,19 +6,21 @@
 
 
 OpenGLScene::OpenGLScene()
-    : m_root(new SceneNode("__root__"))
+    : m_rootNode(new SceneNode("__root__"))
 {
-    auto cameraNode=std::make_shared<SceneNode>("camera");
-    m_root->addChild(cameraNode);
-    m_camera=std::make_shared<Camera>(cameraNode);
+    m_cameraNode=std::make_shared<SceneNode>("camera");
+    m_rootNode->addChild(m_cameraNode);
+	auto camera=std::make_shared<Camera>(m_cameraNode);
+	m_cameraNode->setCamera(camera);
 
-    auto lightNode=std::make_shared<SceneNode>("light");
-    m_root->addChild(lightNode);
+    m_lightNode=std::make_shared<SceneNode>("light");
+    m_rootNode->addChild(m_lightNode);
+    m_lightNode->setPosition(1.0f, 2.0f, 3.0f);
 
     auto meshNode=std::make_shared<SceneNode>("triangle");
     auto mesh=IndexedVertexBuffer::CreateTriangle();
     meshNode->setMesh(mesh);
-    m_root->addChild(meshNode);
+    m_rootNode->addChild(meshNode);
 }
 
 OpenGLScene::~OpenGLScene()
@@ -29,3 +31,7 @@ void OpenGLScene::update(int ms)
 {
 }
 
+std::shared_ptr<Camera> OpenGLScene::getCamera()
+{
+	return m_cameraNode->getCamera();
+}

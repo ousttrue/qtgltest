@@ -25,6 +25,7 @@ files {
     "moc_glview.cpp",
     "moc_scenetreewidget.cpp",
     "moc_scenemodel.cpp",
+    "moc_scenenodewidget.cpp",
 }
 
 -- compile

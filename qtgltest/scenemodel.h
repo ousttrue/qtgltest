@@ -55,6 +55,7 @@ public:
 signals:
     void logging(const QString &message);
     void updated();
+    void sceneNodeUpdated(std::shared_ptr<SceneNode> node);
 
 };
 
