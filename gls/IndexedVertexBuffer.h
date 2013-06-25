@@ -28,10 +28,26 @@ struct Vertex
     {
     }
 };
+struct Vec3
+{
+    float x;
+    float y;
+    float z;
+};
+struct Material
+{
+    std::string name;
+    Vec3 diffuse;
+    Vec3 specular;
+    Vec3 ambient;
+    std::string texture_file;
+    unsigned int index_count;
+};
 class IndexedVertexBuffer
 {
     std::vector<Vertex> m_vertices;
     std::vector<unsigned int> m_indices;
+    std::vector<Material> m_materials;
 
     std::string m_utf8path;
 
@@ -80,6 +96,9 @@ public:
             return &m_indices[0];
         }
     }
+
+    void addMaterial(){ m_materials.push_back(Material()); }
+    Material &getMaterial(unsigned int index){ return m_materials[index]; }
 
     static std::shared_ptr<IndexedVertexBuffer> CreateTriangle();
     static std::shared_ptr<IndexedVertexBuffer> CreateCube(float size);
