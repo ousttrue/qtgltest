@@ -140,8 +140,8 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPMD(
         unsigned char flag=reader.get<unsigned char>();
 
         buffer->pushVertex(Vertex(
-			x, y, z,
-			nx, ny, nz,
+			x, y, -z,
+			nx, ny, -nz,
 			0, 0, 0));
     }
 
