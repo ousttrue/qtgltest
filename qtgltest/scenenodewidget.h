@@ -1,10 +1,15 @@
 #pragma once
-#include "ui_scenenodewidget.h"
+#include <QWidget>
 #include <memory>
 
 
+namespace Ui {
+class SceneNodeWidget;
+}
+
+
 class SceneNode;
-class SceneNodeWidget: public QWidget, Ui::SceneNodeWidget
+class SceneNodeWidget: public QWidget
 {
 Q_OBJECT
 
@@ -12,6 +17,7 @@ Q_OBJECT
 
 public:
     SceneNodeWidget(std::shared_ptr<SceneNode> node, QWidget *parent=0);
+    ~SceneNodeWidget();
 
 public slots:
     void onUpdate(std::shared_ptr<SceneNode> node);
@@ -21,5 +27,8 @@ private slots:
 
 private:
     void updateSceneNode();
+
+private:
+    Ui::SceneNodeWidget *ui;
 };
 
