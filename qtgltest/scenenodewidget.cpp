@@ -9,6 +9,28 @@ SceneNodeWidget::SceneNodeWidget(std::shared_ptr<SceneNode> node, QWidget *paren
 	updateSceneNode();
     QObject::connect(q_x, SIGNAL(valueChanged(double)),
             this, SLOT(onValueChanged()));
+
+    auto mesh=node->getMesh();
+    if(mesh){
+        meshWidget->show();
+    }
+    else{
+        meshWidget->hide();
+    }
+    auto camera=node->getCamera();
+    if(camera){
+        cameraWidget->show();
+    }
+    else{
+        cameraWidget->hide();
+    }
+    auto light=node->getLight();
+    if(light){
+        lightWidget->show();
+    }
+    else{
+        lightWidget->hide();
+    }
 }
 
 void SceneNodeWidget::onUpdate(std::shared_ptr<SceneNode> node)

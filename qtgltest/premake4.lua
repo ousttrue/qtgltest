@@ -26,6 +26,9 @@ files {
     "moc_scenetreewidget.cpp",
     "moc_scenemodel.cpp",
     "moc_scenenodewidget.cpp",
+    "moc_meshwidget.cpp",
+    "moc_camerawidget.cpp",
+    "moc_lightwidget.cpp",
 }
 
 -- compile

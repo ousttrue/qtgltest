@@ -1,7 +1,7 @@
 MOC=moc
-MOC_FILES=moc_mainwindow.cpp moc_loggingwidget.cpp moc_glview.cpp moc_scenetreewidget.cpp moc_scenemodel.cpp moc_scenenodewidget.cpp
+MOC_FILES=moc_mainwindow.cpp moc_loggingwidget.cpp moc_glview.cpp moc_scenetreewidget.cpp moc_scenemodel.cpp moc_scenenodewidget.cpp moc_meshwidget.cpp moc_camerawidget.cpp moc_lightwidget.cpp
 UIC=uic
-UI_FILES=ui_scenenodewidget.h
+UI_FILES=ui_scenenodewidget.h ui_meshwidget.h ui_camerawidget.h ui_lightwidget.h
 
 
 moc: $(MOC_FILES) $(UI_FILES)
@@ -24,8 +24,26 @@ moc_scenemodel.cpp: scenemodel.h
 moc_scenenodewidget.cpp: scenenodewidget.h
 	$(MOC) $? -o $@
 
+moc_meshwidget.cpp: meshwidget.h
+	$(MOC) $? -o $@
+
+moc_camerawidget.cpp: camerawidget.h
+	$(MOC) $? -o $@
+
+moc_lightwidget.cpp: lightwidget.h
+	$(MOC) $? -o $@
+
 
 ui_scenenodewidget.h: scenenodewidget.ui
+	$(UIC) $? -o $@
+
+ui_meshwidget.h: meshwidget.ui
+	$(UIC) $? -o $@
+
+ui_camerawidget.h: camerawidget.ui
+	$(UIC) $? -o $@
+
+ui_lightwidget.h: lightwidget.ui
 	$(UIC) $? -o $@
 
 

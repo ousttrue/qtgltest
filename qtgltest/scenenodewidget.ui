@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>301</width>
-    <height>161</height>
+    <height>262</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -137,6 +137,15 @@
     </layout>
    </item>
    <item>
+    <widget class="MeshWidget" name="meshWidget" native="true"/>
+   </item>
+   <item>
+    <widget class="CameraWidget" name="cameraWidget" native="true"/>
+   </item>
+   <item>
+    <widget class="LightWidget" name="lightWidget" native="true"/>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -151,6 +160,26 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MeshWidget</class>
+   <extends>QWidget</extends>
+   <header>meshwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CameraWidget</class>
+   <extends>QWidget</extends>
+   <header>camerawidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LightWidget</class>
+   <extends>QWidget</extends>
+   <header>lightwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
