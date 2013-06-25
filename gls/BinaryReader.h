@@ -32,9 +32,9 @@ public:
     }
 
     template<typename T>
-        T get()
+        T &get(T &t)
         {
-            T t= *((T*)current());
+            t= *((T*)current());
             m_pos+=sizeof(T);
             return t;
         }

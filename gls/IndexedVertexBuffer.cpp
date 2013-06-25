@@ -116,7 +116,8 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPMD(
         return std::shared_ptr<IndexedVertexBuffer>();
     }
 
-    float version=reader.get<float>();
+    float version;
+    reader.get(version);
     if(version!=1.0f){
         return std::shared_ptr<IndexedVertexBuffer>();
     }
@@ -124,31 +125,57 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPMD(
     std::string name=reader.getString(20);
     std::string comment=reader.getString(256);
 
-    unsigned int vertexCount=reader.get<unsigned int>();
+    // vertices
+    unsigned int vertexCount;
+    reader.get(vertexCount);
     for(unsigned int i=0; i<vertexCount; ++i){
-        float x=reader.get<float>();
-        float y=reader.get<float>();
-        float z=reader.get<float>();
-        float nx=reader.get<float>();
-        float ny=reader.get<float>();
-        float nz=reader.get<float>();
-        float u=reader.get<float>();
-        float v=reader.get<float>();
-        unsigned short b0=reader.get<unsigned short>();
-        unsigned short b1=reader.get<unsigned short>();
-        unsigned char w0=reader.get<unsigned char>();
-        unsigned char flag=reader.get<unsigned char>();
-
+        float x, y, z, nx, ny, nz, u, v;
+        unsigned short b0, b1;
+        unsigned char w0, flag;
+        reader.get(x);
+        reader.get(y);
+        reader.get(z);
+        reader.get(nx);
+        reader.get(ny);
+        reader.get(nz);
+        reader.get(u);
+        reader.get(v);
+        reader.get(b0);
+        reader.get(b1);
+        reader.get(w0);
+        reader.get(flag);
         buffer->pushVertex(Vertex(
 			x, y, -z,
 			nx, ny, -nz,
 			0, 0, 0));
     }
 
-    unsigned int indexCount=reader.get<unsigned int>();
+    // indices
+    unsigned int indexCount;
+    reader.get(indexCount);
     for(unsigned int i=0; i<indexCount; ++i){
-        unsigned short index=reader.get<unsigned short>();
+        unsigned short index;
+        reader.get(index);
         buffer->pushIndex(index);
+    }
+
+    // materials
+    unsigned int materialCount;
+    reader.get(materialCount);
+    for(unsigned int i=0; i<materialCount; ++i){
+        /*
+ 
+                diffuse_color=self.read_rgb(),
+                alpha=self.read_float(),
+                specular_factor=self.read_float(),
+                specular_color=self.read_rgb(),
+                ambient_color=self.read_rgb(),
+                toon_index=self.read_int(1),
+                edge_flag=self.read_uint(1),
+                vertex_count=self.read_uint(4),
+                texture_file=self.read_text(20)
+                )
+        */
     }
 
     return buffer;
