@@ -7,6 +7,14 @@
 #include "BinaryReader.h"
 
 
+struct Vec3
+{
+    float x;
+    float y;
+    float z;
+};
+
+
 IndexedVertexBuffer::IndexedVertexBuffer()
 {
 }
@@ -163,19 +171,21 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateFromPMD(
     unsigned int materialCount;
     reader.get(materialCount);
     for(unsigned int i=0; i<materialCount; ++i){
-        /*
- 
-                diffuse_color=self.read_rgb(),
-                alpha=self.read_float(),
-                specular_factor=self.read_float(),
-                specular_color=self.read_rgb(),
-                ambient_color=self.read_rgb(),
-                toon_index=self.read_int(1),
-                edge_flag=self.read_uint(1),
-                vertex_count=self.read_uint(4),
-                texture_file=self.read_text(20)
-                )
-        */
+        Vec3 diffuse_color, specular_color, ambient_color;
+        float alpha, specular_factor;
+        char toon_index;
+        unsigned char edge_flag;
+        unsigned int vertex_count;
+        std::string texture_file;
+        reader.get(diffuse_color);
+        reader.get(alpha);
+        reader.get(specular_factor);
+        reader.get(specular_color);
+        reader.get(ambient_color);
+        reader.get(toon_index);
+        reader.get(edge_flag);
+        reader.get(vertex_count);
+        texture_file=reader.getString(20);
     }
 
     return buffer;
