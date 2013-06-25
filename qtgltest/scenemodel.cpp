@@ -155,11 +155,6 @@ void SceneModel::loadFile(const QString &path)
 
     logging(QString("open %1").arg(path));
 
-	if(m_openglScene->getRootNode()->childCount()>0){
-		int count=m_openglScene->getRootNode()->childCount();
-		removeRows(0, count, QModelIndex());
-	}
-
     auto modelNode=std::make_shared<SceneNode>(path.toUtf8().data());
     modelNode->setMesh(model);
     m_openglScene->getRootNode()->addChild(modelNode);

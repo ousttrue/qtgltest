@@ -1,6 +1,7 @@
 #include "OpenGLScene.h"
 #include <GL/glew.h>
 #include "Camera.h"
+#include "Light.h"
 #include "IndexedVertexBuffer.h"
 #include "SceneNode.h"
 
@@ -16,6 +17,9 @@ OpenGLScene::OpenGLScene()
     m_lightNode=std::make_shared<SceneNode>("light");
     m_rootNode->addChild(m_lightNode);
     m_lightNode->setPosition(1.0f, 2.0f, 3.0f);
+    auto light=std::make_shared<Light>();
+    light->setDiffuse(Vec3(1.0f, 0.8f, 0.8f));
+    m_lightNode->setLight(light);
 
     auto meshNode=std::make_shared<SceneNode>("triangle");
     auto mesh=IndexedVertexBuffer::CreateTriangle();

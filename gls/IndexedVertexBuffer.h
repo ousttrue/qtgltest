@@ -2,7 +2,7 @@
 #include <memory>
 #include <vector>
 #include <string>
-
+#include "Vec3.h"
 
 struct Vertex
 {
@@ -27,12 +27,6 @@ struct Vertex
         : x(_x), y(_y), z(_z), nx(_nx), ny(_ny), nz(_nz), r(_r), g(_g), b(_b)
     {
     }
-};
-struct Vec3
-{
-    float x;
-    float y;
-    float z;
 };
 struct Material
 {

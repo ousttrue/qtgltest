@@ -8,6 +8,7 @@
 #include "ShaderProgram.h"
 #include <glm/gtc/type_ptr.hpp>
 #include "Camera.h"
+#include "Light.h"
 #include "VAO.h"
 #include "IndexedVertexBuffer.h"
 #include "Shader.h"
@@ -109,7 +110,11 @@ void OpenGLRenderer::renderNode(std::shared_ptr<SceneNode> cameraNode,
             program->setUniform("MVP",  projection * mv);
 
             // light
-            program->setUniform("Ld", glm::vec3(1.0f, 1.0f, 1.0f));
+            program->setUniform("Ld", glm::vec3(
+                        light->getDiffuse().x,
+                        light->getDiffuse().y,
+                        light->getDiffuse().z
+                        ));
             auto &lightPos=lightNode->position();
             program->setUniform("LightPosition", glm::vec4(lightPos[0], lightPos[1], lightPos[2], 1.0f));
 

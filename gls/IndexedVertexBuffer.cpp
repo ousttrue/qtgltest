@@ -90,6 +90,14 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateTriangle()
                 /*color*/ 0.0f, 0.0f, 1.0f
                 ));
     buffer->addTriangle(0, 1, 2);
+
+	buffer->addMaterial();
+	auto &material=buffer->getMaterial(0);
+	material.diffuse.x=0.8f;
+	material.diffuse.y=0.8f;
+	material.diffuse.z=0.8f;
+	material.index_count=3;
+
     return buffer;
 }
 
