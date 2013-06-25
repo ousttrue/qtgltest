@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 #include <array>
-
+#include "Vec3.h"
 
 class IndexedVertexBuffer;
 class Camera;
@@ -55,6 +55,7 @@ public:
         m_quaternion[3]=w;
     }
     const std::array<float, 4> &quaternion()const{ return m_quaternion; }
+    Vec3 euler()const;
 
     // mesh
     void setMesh(const std::shared_ptr<IndexedVertexBuffer> &buffer){ m_buffer=buffer; }
@@ -67,6 +68,5 @@ public:
     // light
     void setLight(const std::shared_ptr<Light> &light){ m_light=light; }
     std::shared_ptr<Light> getLight()const{ return m_light; }
-
 };
 

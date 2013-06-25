@@ -50,12 +50,18 @@ void SceneNodeWidget::updateSceneNode()
     if(!target){
         return;
     }
+
+    // position
     auto &position=target->position();
     ui->q_x->setValue(position[0]);
     ui->q_y->setValue(position[1]);
     ui->q_z->setValue(position[2]);
+
+    // rotation
     auto &quternion=target->quaternion();
 
+
+    // mesh
     auto mesh=target->getMesh();
     if(mesh){
         ui->meshWidget->show();
@@ -63,6 +69,8 @@ void SceneNodeWidget::updateSceneNode()
     else{
         ui->meshWidget->hide();
     }
+
+    // camera
     auto camera=target->getCamera();
     if(camera){
         ui->cameraWidget->show();
@@ -70,6 +78,8 @@ void SceneNodeWidget::updateSceneNode()
     else{
         ui->cameraWidget->hide();
     }
+
+    // light
     auto light=target->getLight();
     if(light){
         ui->lightWidget->show();
@@ -78,3 +88,4 @@ void SceneNodeWidget::updateSceneNode()
         ui->lightWidget->hide();
     }
 }
+

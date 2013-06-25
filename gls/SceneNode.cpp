@@ -38,3 +38,9 @@ void SceneNode::removeChildren(size_t index, size_t count)
     m_children.erase(start, start+count);
 }
 
+Vec3 SceneNode::euler()const
+{
+    Vec3 vec3;
+    return vec3;
+}
+
