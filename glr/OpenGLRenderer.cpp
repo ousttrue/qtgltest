@@ -99,20 +99,19 @@ void OpenGLRenderer::renderNode(std::shared_ptr<SceneNode> cameraNode,
 
             // shader
             glUseProgram(program->getHandle());
-            // view
+
+            // matrices
             glm::mat4 projection=glm::make_mat4(camera->getProjectionMatrix());
             program->setUniform("ProjectionMatrix", projection);
-
             glm::mat4 mv=glm::make_mat4(camera->getViewMatrix());
             program->setUniform("ModelViewMatrix", mv);
             program->setUniform("NormalMatrix", glm::mat3(mv));
+            program->setUniform("MVP",  projection * mv);
 
-            program->setUniform("Kd", glm::vec3(0.8f, 0.8f, 0.8f));
+            // light
             program->setUniform("Ld", glm::vec3(1.0f, 1.0f, 1.0f));
             auto &lightPos=lightNode->position();
             program->setUniform("LightPosition", glm::vec4(lightPos[0], lightPos[1], lightPos[2], 1.0f));
-
-            program->setUniform("MVP",  projection * mv);
 
             // set vertex buffer
             glBindVertexArray(drawable->getVAO()->getHandle());
@@ -123,10 +122,16 @@ void OpenGLRenderer::renderNode(std::shared_ptr<SceneNode> cameraNode,
             unsigned int offset=0;
             int submeshCount=buffer->getSubMeshCount();
             for(int i=0; i<submeshCount; ++i){
-                unsigned int indexCount=buffer->getIndexCount(i);
-                glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 
-                        (const GLvoid*)offset);
-                offset+=indexCount;
+                // submesh
+                auto &material=buffer->getMaterial(i);
+				program->setUniform("Kd", glm::vec3(
+					material.diffuse.x, 
+					material.diffuse.y, 
+					material.diffuse.z
+					));
+                glDrawElements(GL_TRIANGLES, material.index_count, GL_UNSIGNED_INT, 
+                        (const GLvoid*)(offset * sizeof(GLuint)));
+				offset+=material.index_count;
             }
         }
     }

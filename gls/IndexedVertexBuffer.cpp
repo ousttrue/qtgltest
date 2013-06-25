@@ -71,16 +71,6 @@ std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateCube(float fSize
     return buffer;
 }
 
-unsigned int IndexedVertexBuffer::getSubMeshCount()
-{
-    return 1;
-}
-
-unsigned int IndexedVertexBuffer::getIndexCount(unsigned int inex)
-{
-    return m_indices.size();
-}
-
 std::shared_ptr<IndexedVertexBuffer> IndexedVertexBuffer::CreateTriangle()
 {
     auto buffer=std::make_shared<IndexedVertexBuffer>();

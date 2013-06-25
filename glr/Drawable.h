@@ -9,7 +9,6 @@ class Drawable
 {
     std::shared_ptr<ShaderProgram> m_program;
     std::shared_ptr<VAO> m_vao;
-
 public:
     bool initialize(std::shared_ptr<IndexedVertexBuffer> buffer);
     void setShader(std::shared_ptr<ShaderProgram> shader){ m_program=shader; }

@@ -67,8 +67,9 @@ public:
         m_indices.push_back(i2);
     }
 
-    unsigned int getIndexCount(unsigned int inex);
-    unsigned int getSubMeshCount();
+    void addMaterial(){ m_materials.push_back(Material()); }
+    Material &getMaterial(unsigned int index){ return m_materials[index]; }
+    unsigned int getSubMeshCount(){ return m_materials.size(); }
 
     unsigned int getVerticesByteSize()const
     { 
@@ -96,9 +97,6 @@ public:
             return &m_indices[0];
         }
     }
-
-    void addMaterial(){ m_materials.push_back(Material()); }
-    Material &getMaterial(unsigned int index){ return m_materials[index]; }
 
     static std::shared_ptr<IndexedVertexBuffer> CreateTriangle();
     static std::shared_ptr<IndexedVertexBuffer> CreateCube(float size);
